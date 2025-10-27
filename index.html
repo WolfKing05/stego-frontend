@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Image Steganography — Cloud Demo</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;margin:0;padding:20px;background:#f6f7fb;color:#111}
+    .wrap{max-width:960px;margin:20px auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 6px 30px rgba(0,0,0,.06)}
+    h1{margin:0 0 12px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1;min-width:240px}
+    input[type=file]{display:block;margin:8px 0}
+    button{padding:10px 14px;border-radius:8px;border:0;background:#111;color:#fff;cursor:pointer}
+    img.preview{max-width:100%;border-radius:6px;margin-top:8px}
+    .log{margin-top:12px;color:#333}
+    a.small{font-size:0.9rem;color:#0066cc}
+    .note{font-size:.85rem;color:#666;margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Image Steganography — Cloud Demo</h1>
+    <p class="note">Frontend hosted on GitHub Pages. Processing handled by Flask backend on Render.</p>
+
+    <div class="row">
+      <div class="col" id="encode-col">
+        <h3>Encode (Embed Secret)</h3>
+        <label>Cover image (where secret hides)</label>
+        <input id="cover-file" type="file" accept="image/png,image/jpeg" />
+        <label>Secret image (to embed)</label>
+        <input id="secret-file" type="file" accept="image/png,image/jpeg" />
+        <div style="margin-top:10px">
+          <button id="encode-btn">Encode → Upload to Server</button>
+        </div>
+        <div class="log" id="encode-log"></div>
+        <div id="stego-out"></div>
+      </div>
+
+      <div class="col" id="decode-col">
+        <h3>Decode (Extract Secret)</h3>
+        <label>Stego image (with secret)</label>
+        <input id="stego-file" type="file" accept="image/png,image/jpeg" />
+        <label>Original cover image</label>
+        <input id="orig-cover-file" type="file" accept="image/png,image/jpeg" />
+        <div style="margin-top:10px">
+          <button id="decode-btn">Decode → Upload to Server</button>
+        </div>
+        <div class="log" id="decode-log"></div>
+        <div id="extracted-out"></div>
+      </div>
+    </div>
+
+    <hr />
+    <p class="note">Use small images (≤512px). Backend URL:</p>
+    <p><strong id="backend-url-display"></strong></p>
+  </div>
+
+<script>
+  const BACKEND_URL = "https://stego-backend-l72r.onrender.com";
+  document.getElementById("backend-url-display").textContent = BACKEND_URL;
+
+  function showLog(id, msg, isError=false) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.style.color = isError ? "crimson" : "#333";
+  }
+
+  async function postFiles(endpoint, files) {
+    const form = new FormData();
+    for (const [k, v] of Object.entries(files)) form.append(k, v);
+    const url = BACKEND_URL + endpoint;
+    const res = await fetch(url, { method: "POST", body: form });
+    return res;
+  }
+
+  function fileToBlob(inputEl) {
+    const f = inputEl.files && inputEl.files[0];
+    return f || null;
+  }
+
+  document.getElementById("encode-btn").onclick = async () => {
+    showLog("encode-log", "Uploading...");
+    const cover = fileToBlob(document.getElementById("cover-file"));
+    const secret = fileToBlob(document.getElementById("secret-file"));
+    if (!cover || !secret) { showLog("encode-log", "Select both images.", true); return; }
+    try {
+      const res = await postFiles("/encode", { cover, secret });
+      if (!res.ok) throw new Error(await res.text());
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      document.getElementById("stego-out").innerHTML =
+        `<h4>Stego Image</h4>
+         <a class="small" download="stego.png" href="${url}">Download stego.png</a>
+         <div><img class="preview" src="${url}" /></div>`;
+      showLog("encode-log", "Done.");
+    } catch (err) { showLog("encode-log", err.message, true); }
+  };
+
+  document.getElementById("decode-btn").onclick = async () => {
+    showLog("decode-log", "Uploading...");
+    const stego = fileToBlob(document.getElementById("stego-file"));
+    const cover = fileToBlob(document.getElementById("orig-cover-file"));
+    if (!stego || !cover) { showLog("decode-log", "Select both images.", true); return; }
+    try {
+      const res = await postFiles("/decode", { stego, cover });
+      if (!res.ok) throw new Error(await res.text());
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      document.getElementById("extracted-out").innerHTML =
+        `<h4>Extracted Secret</h4>
+         <a class="small" download="extracted.png" href="${url}">Download extracted.png</a>
+         <div><img class="preview" src="${url}" /></div>`;
+      showLog("decode-log", "Done.");
+    } catch (err) { showLog("decode-log", err.message, true); }
+  };
+</script>
+</body>
+</html>
