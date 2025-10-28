@@ -1,279 +1,268 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>StegoVision — Light & Dark Themes</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    /* LIGHT PASTEL THEME (default) */
-    --bg: #f7fbfa;            /* off-white */
-    --card: #ffffff;          /* card bg */
-    --muted: #6b7280;         /* muted text */
-    --text: #0f1724;          /* main text */
-    --accent: #4cc9b1;        /* mint */
-    --accent-2: #ff8fa3;      /* coral */
-    --shadow: 0 8px 30px rgba(16,24,40,0.06);
-    --btn-text: #042a2b;
-    --header-accent: linear-gradient(90deg, #9be7c4, #ffd0d6);
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StegoVision — Cloud Image Steganography</title>
+  <style>
+    :root {
+      --bg-dark: #0e1116;
+      --bg-card: #1a1f29;
+      --accent: #00b4d8;
+      --accent-light: #48cae4;
+      --text-light: #e5e5e5;
+      --shadow: rgba(0, 0, 0, 0.6);
+    }
 
-  body.theme-dark{
-    /* DARK TECH THEME */
-    --bg: linear-gradient(180deg,#071021,#0b1220);
-    --card: #0f1720;
-    --muted: #9aa4b2;
-    --text: #e6eef6;
-    --accent: #00b4d8;
-    --accent-2: #48cae4;
-    --shadow: 0 10px 30px rgba(2,8,20,0.65);
-    --btn-text: #00121a;
-    --header-accent: linear-gradient(90deg,#00b4d8,#48cae4);
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:Inter, "Segoe UI", system-ui, -apple-system, Roboto, Arial;
-    background:var(--bg);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:20px;
-  }
+    body {
+      font-family: "Inter", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, var(--bg-dark), #1b2735);
+      color: var(--text-light);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-  header{
-    width:100%;
-    max-width:1100px;
-    background:var(--card);
-    border-radius:14px;
-    padding:18px 20px;
-    box-shadow:var(--shadow);
-    display:flex;
-    align-items:center;
-    gap:16px;
-  }
+    header {
+      width: 100%;
+      text-align: center;
+      background: rgba(20, 25, 35, 0.95);
+      padding: 1.2rem;
+      box-shadow: 0 4px 12px var(--shadow);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent-light);
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--accent);
+    }
 
-  .logo{
-    width:56px;height:56px;border-radius:12px;
-    background:var(--header-accent);
-    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--btn-text);
-    font-size:18px;
-  }
+    .container {
+      width: 92%;
+      max-width: 1100px;
+      margin: 40px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
 
-  header h1{margin:0;font-size:1.15rem;}
-  .header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
-  .theme-toggle{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.03);padding:6px;border-radius:10px}
-  .theme-toggle input{display:none}
-  .theme-switch{width:44px;height:24px;border-radius:999px;background:rgba(0,0,0,0.08);position:relative;cursor:pointer}
-  .theme-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:0 2px 6px rgba(0,0,0,0.12);transition:all .22s}
+    .card {
+      background: var(--bg-card);
+      border-radius: 14px;
+      box-shadow: 0 4px 15px var(--shadow);
+      padding: 25px;
+      flex: 1;
+      min-width: 340px;
+      max-width: 480px;
+      transition: 0.25s;
+    }
 
-  /* layout */
-  .container{max-width:1100px;width:100%;margin-top:22px;display:grid;grid-template-columns:1fr 360px;gap:20px}
-  .panel{background:var(--card);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
-  .col{margin-bottom:12px}
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px rgba(0, 180, 216, 0.3);
+    }
 
-  h2{margin:8px 0 14px;font-weight:600}
-  label{display:block;font-weight:600;margin-bottom:8px;color:var(--muted)}
+    .card h3 {
+      color: var(--accent-light);
+      text-align: center;
+      margin-top: 0;
+    }
 
-  .dropzone{border:1px dashed rgba(0,0,0,0.06);padding:10px;border-radius:10px;background:transparent;display:flex;align-items:center;gap:12px}
-  input[type=file]{display:block;width:100%}
-  .preview{width:100%;max-height:220px;object-fit:contain;border-radius:10px;background:transparent;margin-top:8px;border:1px solid rgba(0,0,0,0.03);padding:6px}
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 500;
+      color: #cfcfcf;
+    }
 
-  .flex{display:flex;gap:12px;align-items:center}
-  button{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:0;color:var(--btn-text);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
-  button.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);font-weight:600}
+    input[type="file"] {
+      width: 100%;
+      background: #252a34;
+      border: 1px solid #2e3440;
+      border-radius: 8px;
+      padding: 8px;
+      color: #aaa;
+      cursor: pointer;
+    }
 
-  .note{font-size:0.9rem;color:var(--muted);margin-top:12px;text-align:center}
+    input[type="file"]::-webkit-file-upload-button {
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-  .right .preview-block{display:flex;flex-direction:column;gap:12px}
-  .preview-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:10px;border-radius:10px}
-  .small{font-size:0.9rem;color:var(--muted)}
-  .download{display:inline-block;margin-top:8px;color:var(--text);font-weight:700;text-decoration:none;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.06)}
+    input[type="file"]::-webkit-file-upload-button:hover {
+      background: var(--accent-light);
+    }
 
-  footer{margin-top:24px;color:var(--muted);font-size:0.9rem}
+    .preview {
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #0e121a;
+      box-shadow: 0 0 10px rgba(0, 180, 216, 0.1);
+      max-height: 240px;
+      object-fit: contain;
+    }
 
-  @media(max-width:980px){ .container{grid-template-columns:1fr; } header{flex-direction:column;align-items:flex-start;gap:12px} .header-right{margin-left:0} }
-</style>
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px 0;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 0 10px rgba(0, 180, 216, 0.4);
+      transition: 0.25s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      box-shadow: 0 0 18px rgba(0, 180, 216, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .result {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .result img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: 0 0 15px rgba(0, 180, 216, 0.15);
+    }
+
+    .download {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--accent-light);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer {
+      margin: 40px 0 15px;
+      font-size: 0.9rem;
+      color: #999;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <header>StegoVision — Cloud Image Steganography</header>
 
-<header>
-  <div class="logo">SV</div>
-  <div>
-    <h1>StegoVision</h1>
-    <div class="small">Cloud Image Steganography — Light & Dark</div>
-  </div>
-
-  <div class="header-right">
-    <div class="small">Theme</div>
-    <div class="theme-toggle" title="Toggle theme (light / dark)">
-      <div id="themeSwitch" class="theme-switch" role="switch" aria-checked="false">
-        <div id="themeKnob" class="theme-knob"></div>
-      </div>
-    </div>
-  </div>
-</header>
-
-<div class="container">
-  <!-- main -->
-  <div class="panel">
-    <h2>Encode & Decode</h2>
-
-    <div class="col">
+  <div class="container">
+    <div class="card">
+      <h3>🔐 Encode (Hide Secret)</h3>
       <label>Cover Image</label>
-      <input id="coverFile" type="file" accept="image/*" />
-      <img id="coverPreview" class="preview" alt="cover preview" />
-    </div>
+      <input type="file" id="cover" accept="image/*" />
+      <img id="coverPreview" class="preview" alt="Cover Preview" />
 
-    <div class="col">
       <label>Secret Image</label>
-      <input id="secretFile" type="file" accept="image/*" />
-      <img id="secretPreview" class="preview" alt="secret preview" />
+      <input type="file" id="secret" accept="image/*" />
+      <img id="secretPreview" class="preview" alt="Secret Preview" />
+
+      <button id="encodeBtn">Encode Image</button>
+      <div class="result" id="encodeResult"></div>
     </div>
 
-    <div class="flex" style="margin-top:12px">
-      <button id="encodeBtn">Encode → Upload</button>
-      <button id="downloadStegoBtn" class="ghost" style="display:none">Download stego</button>
-    </div>
-
-    <hr style="margin:14px 0;border:none;border-top:1px solid rgba(0,0,0,0.04)">
-
-    <div class="col">
+    <div class="card">
+      <h3>🧩 Decode (Reveal Secret)</h3>
       <label>Stego Image</label>
-      <input id="stegoFile" type="file" accept="image/*" />
-      <img id="stegoPreview" class="preview" alt="stego preview" />
-    </div>
+      <input type="file" id="stego" accept="image/*" />
+      <img id="stegoPreview" class="preview" alt="Stego Preview" />
 
-    <div class="flex" style="margin-top:12px">
-      <button id="decodeBtn">Decode → Upload</button>
-      <button id="downloadExtractBtn" class="ghost" style="display:none">Download extracted</button>
-    </div>
-
-    <div class="note">Backend: <strong id="backendUrl">https://stego-backend-l72r.onrender.com</strong></div>
-  </div>
-
-  <!-- right column -->
-  <div class="panel right">
-    <div class="preview-block">
-      <div class="preview-card">
-        <div class="small">Stego Output</div>
-        <img id="stegoOut" class="preview" alt="stego output" />
-        <div id="stegoLinks" style="margin-top:8px"></div>
-      </div>
-
-      <div class="preview-card">
-        <div class="small">Extracted Secret</div>
-        <img id="extractedOut" class="preview" alt="extracted output" />
-        <div id="extractedLinks" style="margin-top:8px"></div>
-      </div>
+      <button id="decodeBtn">Decode Image</button>
+      <div class="result" id="decodeResult"></div>
     </div>
   </div>
-</div>
 
-<footer>© 2025 • Aryan Patel — StegoVision</footer>
+  <footer>⚙️ Backend: https://stego-backend-l72r.onrender.com • © 2025 Aryan Patel</footer>
 
-<script>
-  const BACKEND = document.getElementById('backendUrl').textContent.trim();
+  <script>
+    const BACKEND = "https://stego-backend-l72r.onrender.com";
 
-  // Theme toggle logic
-  const themeSwitch = document.getElementById('themeSwitch');
-  const themeKnob = document.getElementById('themeKnob');
-  // Default is light pastel (no body class). If user prefers dark from previous session, restore.
-  if (localStorage.getItem('stegov_theme') === 'dark') {
-    document.body.classList.add('theme-dark');
-    themeKnob.style.transform = 'translateX(20px)';
-    themeSwitch.setAttribute('aria-checked','true');
-  }
-  themeSwitch.addEventListener('click', () => {
-    const isDark = document.body.classList.toggle('theme-dark');
-    if (isDark) {
-      themeKnob.style.transform = 'translateX(20px)';
-      themeSwitch.setAttribute('aria-checked','true');
-      localStorage.setItem('stegov_theme','dark');
-    } else {
-      themeKnob.style.transform = 'translateX(0px)';
-      themeSwitch.setAttribute('aria-checked','false');
-      localStorage.setItem('stegov_theme','light');
+    function preview(input, id) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => (document.getElementById(id).src = e.target.result);
+      reader.readAsDataURL(file);
     }
-  });
 
-  // Helpers
-  function previewInput(fileInput, imgElId) {
-    const f = fileInput.files && fileInput.files[0];
-    const el = document.getElementById(imgElId);
-    if (!f) { el.src=''; el.style.display='none'; return; }
-    const reader = new FileReader();
-    reader.onload = e => { el.src = e.target.result; el.style.display='block'; };
-    reader.readAsDataURL(f);
-  }
+    document.getElementById("cover").onchange = e => preview(e.target, "coverPreview");
+    document.getElementById("secret").onchange = e => preview(e.target, "secretPreview");
+    document.getElementById("stego").onchange = e => preview(e.target, "stegoPreview");
 
-  document.getElementById('coverFile').addEventListener('change', e => previewInput(e.target,'coverPreview'));
-  document.getElementById('secretFile').addEventListener('change', e => previewInput(e.target,'secretPreview'));
-  document.getElementById('stegoFile').addEventListener('change', e => previewInput(e.target,'stegoPreview'));
-
-  // Upload helpers
-  async function postFiles(endpoint, files) {
-    const fd = new FormData();
-    for (const k in files) if (files[k]) fd.append(k, files[k]);
-    const res = await fetch(BACKEND + endpoint, { method: 'POST', body: fd });
-    if (!res.ok) {
-      const txt = await res.text();
-      throw new Error(txt || 'Server error');
+    async function send(url, files) {
+      const fd = new FormData();
+      for (const [k, v] of Object.entries(files)) fd.append(k, v);
+      const res = await fetch(url, { method: "POST", body: fd });
+      if (!res.ok) throw new Error(await res.text());
+      return await res.blob();
     }
-    return await res.blob();
-  }
 
-  // Encode flow
-  let lastStegoBlob = null;
-  document.getElementById('encodeBtn').addEventListener('click', async () => {
-    const cover = document.getElementById('coverFile').files[0];
-    const secret = document.getElementById('secretFile').files[0];
-    if (!cover || !secret) { alert('Select both cover and secret images'); return; }
-    try {
-      document.getElementById('encodeBtn').textContent = 'Uploading...';
-      const blob = await postFiles('/encode', { cover, secret });
-      lastStegoBlob = blob;
-      const url = URL.createObjectURL(blob);
-      document.getElementById('stegoOut').src = url;
-      document.getElementById('stegoLinks').innerHTML = `<a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a>`;
-      document.getElementById('downloadStegoBtn').style.display='inline-block';
-      document.getElementById('downloadStegoBtn').onclick = () => { const a=document.createElement('a'); a.href=url; a.download='stego.png'; a.click(); };
-    } catch (err) {
-      alert('Encode failed: ' + (err.message || err));
-    } finally {
-      document.getElementById('encodeBtn').textContent = 'Encode → Upload';
-    }
-  });
+    document.getElementById("encodeBtn").onclick = async () => {
+      const result = document.getElementById("encodeResult");
+      result.innerHTML = "⏳ Encoding...";
+      try {
+        const blob = await send(BACKEND + "/encode", {
+          cover: document.getElementById("cover").files[0],
+          secret: document.getElementById("secret").files[0]
+        });
+        const url = URL.createObjectURL(blob);
+        result.innerHTML = `
+          ✅ Stego Image Ready<br>
+          <a class="download" href="${url}" download="stego.png">⬇️ Download</a><br>
+          <img src="${url}" alt="Stego Image">
+        `;
+      } catch (err) {
+        result.innerHTML = `<span style="color:#ff6b6b;">❌ ${err.message}</span>`;
+      }
+    };
 
-  // Decode flow
-  let lastExtractedBlob = null;
-  document.getElementById('decodeBtn').addEventListener('click', async () => {
-    const stego = document.getElementById('stegoFile').files[0];
-    if (!stego) { alert('Select a stego image to decode'); return; }
-    try {
-      document.getElementById('decodeBtn').textContent = 'Uploading...';
-      const blob = await postFiles('/decode', { stego });
-      lastExtractedBlob = blob;
-      const url = URL.createObjectURL(blob);
-      document.getElementById('extractedOut').src = url;
-      document.getElementById('extractedLinks').innerHTML = `<a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a>`;
-      document.getElementById('downloadExtractBtn').style.display='inline-block';
-    } catch (err) {
-      alert('Decode failed: ' + (err.message || err));
-    } finally {
-      document.getElementById('decodeBtn').textContent = 'Decode → Upload';
-    }
-  });
-
-  // Hook absolute endpoints (so fetch uses full URL)
-  // NOTE: backend path appended in postFiles; we need to set full URL in postFiles -> done.
-
-</script>
+    document.getElementById("decodeBtn").onclick = async () => {
+      const result = document.getElementById("decodeResult");
+      result.innerHTML = "⏳ Decoding...";
+      try {
+        const blob = await send(BACKEND + "/decode", {
+          stego: document.getElementById("stego").files[0]
+        });
+        const url = URL.createObjectURL(blob);
+        result.innerHTML = `
+          ✅ Secret Extracted<br>
+          <a class="download" href="${url}" download="extracted.png">⬇️ Download</a><br>
+          <img src="${url}" alt="Extracted Image">
+        `;
+      } catch (err) {
+        result.innerHTML = `<span style="color:#ff6b6b;">❌ ${err.message}</span>`;
+      }
+    };
+  </script>
 </body>
 </html>
