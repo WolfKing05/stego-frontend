@@ -5,238 +5,284 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cloud Image Steganography — LSB</title>
   <style>
+    :root {
+      --lavender: #e9e7ff;
+      --mint: #e7fff4;
+      --peach: #ffe9ef;
+      --text-dark: #444;
+      --accent: #b58cff;
+      --white: #fff;
+      --shadow: rgba(0, 0, 0, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f8f9fb;
-      color: #333;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--mint), var(--lavender));
+      color: var(--text-dark);
       margin: 0;
-      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     header {
-      background: #dbe7ff;
-      color: #1b1b1b;
+      background: var(--white);
+      width: 100%;
       text-align: center;
-      padding: 1.2rem;
-      font-size: 1.5rem;
+      padding: 1.5rem 1rem;
+      box-shadow: 0 4px 16px var(--shadow);
+      border-bottom: 3px solid var(--accent);
+      font-size: 1.6rem;
       font-weight: 600;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      color: #6449ff;
+      letter-spacing: 0.5px;
     }
 
     .container {
-      max-width: 1100px;
+      background: var(--white);
       margin: 30px auto;
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-      padding: 20px 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px var(--shadow);
+      width: 92%;
+      max-width: 1100px;
+      padding: 25px 35px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     h2 {
-      text-align: center;
-      color: #4a4a4a;
-      margin-top: 0;
+      color: #666;
+      margin: 0.3rem 0 2rem;
+      font-weight: 500;
     }
 
     .row {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 20px;
+      justify-content: center;
+      gap: 25px;
+      width: 100%;
     }
 
     .col {
       flex: 1;
       min-width: 320px;
-      background: #f1f5ff;
-      border-radius: 12px;
+      max-width: 500px;
+      background: var(--lavender);
+      border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+      box-shadow: 0 4px 14px var(--shadow);
+      transition: 0.3s;
+    }
+
+    .col:hover {
+      transform: translateY(-4px);
+    }
+
+    .col h3 {
+      text-align: center;
+      color: #5b3fb8;
+      font-weight: 600;
+      margin-bottom: 1rem;
     }
 
     label {
+      font-size: 0.95rem;
       font-weight: 500;
       display: block;
-      margin-bottom: 6px;
+      margin-top: 10px;
+      margin-bottom: 4px;
     }
 
     input[type="file"] {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 6px;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    button {
-      background: #7fa7ff;
-      color: #fff;
-      border: none;
+      display: block;
+      background: var(--white);
+      border: 1px solid #ddd;
       border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 1rem;
+      padding: 8px;
+      width: 100%;
       cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #5f91ff;
     }
 
     .preview {
+      display: block;
       width: 100%;
-      max-height: 240px;
+      max-height: 220px;
       object-fit: contain;
-      border-radius: 8px;
-      background: #fff;
-      margin-top: 8px;
-    }
-
-    .result {
-      text-align: center;
+      border-radius: 10px;
+      background: var(--white);
+      box-shadow: 0 2px 10px var(--shadow);
       margin-top: 10px;
     }
 
-    .note {
+    button {
+      margin-top: 18px;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: block;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #a06fff;
+      transform: translateY(-1px);
+    }
+
+    .result {
+      margin-top: 15px;
       text-align: center;
       font-size: 0.9rem;
-      color: #666;
+    }
+
+    .result img {
+      margin-top: 10px;
+      width: 100%;
+      max-height: 220px;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+
+    .download {
+      color: #4f2ed8;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .note {
       margin-top: 25px;
+      color: #666;
+      text-align: center;
+      font-size: 0.9rem;
     }
 
     footer {
-      text-align: center;
-      color: #777;
+      margin: 30px 0 10px;
       font-size: 0.85rem;
-      margin: 20px 0;
-    }
-
-    a.download {
-      display: inline-block;
-      margin-top: 8px;
-      color: #2a68d8;
-      font-size: 0.9rem;
+      color: #777;
     }
 
     @media (max-width: 768px) {
-      .row {
-        flex-direction: column;
+      .col {
+        background: var(--peach);
       }
     }
   </style>
 </head>
 
 <body>
-  <header>🖼️ Cloud Image Steganography — LSB</header>
+  <header>🌸 Cloud Image Steganography — LSB</header>
 
   <div class="container">
-    <h2>Hide and Reveal Images in the Cloud</h2>
-    <p class="note">Frontend hosted on GitHub Pages • Backend hosted on Render</p>
+    <h2>Hide & Reveal Images Seamlessly on the Cloud</h2>
 
     <div class="row">
-      <!-- ENCODE -->
       <div class="col">
         <h3>🔐 Encode (Hide Secret)</h3>
         <label>Cover Image</label>
-        <input type="file" id="cover-input" accept="image/*" />
-        <img id="cover-preview" class="preview" alt="Cover Preview" />
+        <input id="cover" type="file" accept="image/*" />
+        <img id="coverPreview" class="preview" alt="Cover Preview">
 
         <label>Secret Image</label>
-        <input type="file" id="secret-input" accept="image/*" />
-        <img id="secret-preview" class="preview" alt="Secret Preview" />
+        <input id="secret" type="file" accept="image/*" />
+        <img id="secretPreview" class="preview" alt="Secret Preview">
 
-        <div style="margin-top:15px;text-align:center;">
-          <button id="encode-btn">Encode & Upload</button>
-        </div>
-
-        <div class="result" id="encode-result"></div>
+        <button id="encodeBtn">Encode Secret</button>
+        <div class="result" id="encodeResult"></div>
       </div>
 
-      <!-- DECODE -->
       <div class="col">
         <h3>🧩 Decode (Reveal Secret)</h3>
         <label>Stego Image</label>
-        <input type="file" id="stego-input" accept="image/*" />
-        <img id="stego-preview" class="preview" alt="Stego Preview" />
+        <input id="stego" type="file" accept="image/*" />
+        <img id="stegoPreview" class="preview" alt="Stego Preview">
 
-        <div style="margin-top:15px;text-align:center;">
-          <button id="decode-btn">Decode Secret</button>
-        </div>
-
-        <div class="result" id="decode-result"></div>
+        <button id="decodeBtn">Decode Secret</button>
+        <div class="result" id="decodeResult"></div>
       </div>
     </div>
 
-    <p class="note" style="margin-top:30px;">
-      Backend URL: <b id="backend-url">https://stego-backend-l72r.onrender.com</b>
+    <p class="note">
+      Backend API: <b id="backend-url">https://stego-backend-l72r.onrender.com</b>
     </p>
   </div>
 
-  <footer>
-    © 2025 • Built by Aryan Patel • LSB Steganography Cloud Project
-  </footer>
+  <footer>© 2025 Aryan Patel — Cloud Steganography Project</footer>
 
   <script>
     const BACKEND = "https://stego-backend-l72r.onrender.com";
 
-    function previewImage(input, previewId) {
+    const cover = document.getElementById("cover");
+    const secret = document.getElementById("secret");
+    const stego = document.getElementById("stego");
+
+    const coverPreview = document.getElementById("coverPreview");
+    const secretPreview = document.getElementById("secretPreview");
+    const stegoPreview = document.getElementById("stegoPreview");
+
+    function showPreview(input, preview) {
       const file = input.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = e => document.getElementById(previewId).src = e.target.result;
+      reader.onload = e => preview.src = e.target.result;
       reader.readAsDataURL(file);
     }
 
-    document.getElementById("cover-input").addEventListener("change", e => previewImage(e.target, "cover-preview"));
-    document.getElementById("secret-input").addEventListener("change", e => previewImage(e.target, "secret-preview"));
-    document.getElementById("stego-input").addEventListener("change", e => previewImage(e.target, "stego-preview"));
+    cover.onchange = () => showPreview(cover, coverPreview);
+    secret.onchange = () => showPreview(secret, secretPreview);
+    stego.onchange = () => showPreview(stego, stegoPreview);
 
-    async function uploadFiles(url, files) {
+    async function upload(url, files) {
       const fd = new FormData();
       for (const [k, v] of Object.entries(files)) fd.append(k, v);
       const res = await fetch(url, { method: "POST", body: fd });
-      if (!res.ok) {
-        const msg = await res.text();
-        throw new Error(msg);
-      }
-      return await res.blob();
+      if (!res.ok) throw new Error(await res.text());
+      return res.blob();
     }
 
-    document.getElementById("encode-btn").addEventListener("click", async () => {
-      const cover = document.getElementById("cover-input").files[0];
-      const secret = document.getElementById("secret-input").files[0];
-      const resultDiv = document.getElementById("encode-result");
-      resultDiv.innerHTML = "⏳ Encoding...";
+    document.getElementById("encodeBtn").onclick = async () => {
+      const result = document.getElementById("encodeResult");
+      result.innerHTML = "⏳ Encoding...";
       try {
-        const blob = await uploadFiles(BACKEND + "/encode", { cover, secret });
+        const blob = await upload(BACKEND + "/encode", {
+          cover: cover.files[0],
+          secret: secret.files[0]
+        });
         const url = URL.createObjectURL(blob);
-        resultDiv.innerHTML = `
+        result.innerHTML = `
           ✅ Done!<br>
           <a class="download" href="${url}" download="stego.png">⬇️ Download Stego Image</a><br>
-          <img src="${url}" class="preview" alt="Stego Image" />
+          <img src="${url}" alt="Stego Image" />
         `;
       } catch (err) {
-        resultDiv.innerHTML = `<span style="color:crimson;">❌ ${err.message}</span>`;
+        result.innerHTML = `<span style="color:crimson;">❌ ${err.message}</span>`;
       }
-    });
+    };
 
-    document.getElementById("decode-btn").addEventListener("click", async () => {
-      const stego = document.getElementById("stego-input").files[0];
-      const resultDiv = document.getElementById("decode-result");
-      resultDiv.innerHTML = "⏳ Decoding...";
+    document.getElementById("decodeBtn").onclick = async () => {
+      const result = document.getElementById("decodeResult");
+      result.innerHTML = "⏳ Decoding...";
       try {
-        const blob = await uploadFiles(BACKEND + "/decode", { stego });
+        const blob = await upload(BACKEND + "/decode", { stego: stego.files[0] });
         const url = URL.createObjectURL(blob);
-        resultDiv.innerHTML = `
+        result.innerHTML = `
           ✅ Secret Extracted!<br>
           <a class="download" href="${url}" download="extracted.png">⬇️ Download Extracted Image</a><br>
-          <img src="${url}" class="preview" alt="Extracted Secret" />
+          <img src="${url}" alt="Extracted Image" />
         `;
       } catch (err) {
-        resultDiv.innerHTML = `<span style="color:crimson;">❌ ${err.message}</span>`;
+        result.innerHTML = `<span style="color:crimson;">❌ ${err.message}</span>`;
       }
-    });
+    };
   </script>
 </body>
 </html>
