@@ -1,242 +1,279 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Image Steganography — Cloud Demo</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f8f9fb;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>StegoVision — Light & Dark Themes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* LIGHT PASTEL THEME (default) */
+    --bg: #f7fbfa;            /* off-white */
+    --card: #ffffff;          /* card bg */
+    --muted: #6b7280;         /* muted text */
+    --text: #0f1724;          /* main text */
+    --accent: #4cc9b1;        /* mint */
+    --accent-2: #ff8fa3;      /* coral */
+    --shadow: 0 8px 30px rgba(16,24,40,0.06);
+    --btn-text: #042a2b;
+    --header-accent: linear-gradient(90deg, #9be7c4, #ffd0d6);
+  }
 
-    header {
-      background: #dbe7ff;
-      color: #1b1b1b;
-      text-align: center;
-      padding: 1.2rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+  body.theme-dark{
+    /* DARK TECH THEME */
+    --bg: linear-gradient(180deg,#071021,#0b1220);
+    --card: #0f1720;
+    --muted: #9aa4b2;
+    --text: #e6eef6;
+    --accent: #00b4d8;
+    --accent-2: #48cae4;
+    --shadow: 0 10px 30px rgba(2,8,20,0.65);
+    --btn-text: #00121a;
+    --header-accent: linear-gradient(90deg,#00b4d8,#48cae4);
+  }
 
-    .container {
-      max-width: 1100px;
-      margin: 30px auto;
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-      padding: 20px 30px;
-    }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, "Segoe UI", system-ui, -apple-system, Roboto, Arial;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px;
+  }
 
-    h2 {
-      text-align: center;
-      color: #4a4a4a;
-      margin-top: 0;
-    }
+  header{
+    width:100%;
+    max-width:1100px;
+    background:var(--card);
+    border-radius:14px;
+    padding:18px 20px;
+    box-shadow:var(--shadow);
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
 
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 20px;
-    }
+  .logo{
+    width:56px;height:56px;border-radius:12px;
+    background:var(--header-accent);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--btn-text);
+    font-size:18px;
+  }
 
-    .col {
-      flex: 1;
-      min-width: 320px;
-      background: #f1f5ff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-    }
+  header h1{margin:0;font-size:1.15rem;}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .theme-toggle{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.03);padding:6px;border-radius:10px}
+  .theme-toggle input{display:none}
+  .theme-switch{width:44px;height:24px;border-radius:999px;background:rgba(0,0,0,0.08);position:relative;cursor:pointer}
+  .theme-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:0 2px 6px rgba(0,0,0,0.12);transition:all .22s}
 
-    label {
-      font-weight: 500;
-      display: block;
-      margin-bottom: 6px;
-    }
+  /* layout */
+  .container{max-width:1100px;width:100%;margin-top:22px;display:grid;grid-template-columns:1fr 360px;gap:20px}
+  .panel{background:var(--card);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+  .col{margin-bottom:12px}
 
-    input[type="file"] {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 6px;
-      width: 100%;
-      margin-bottom: 10px;
-    }
+  h2{margin:8px 0 14px;font-weight:600}
+  label{display:block;font-weight:600;margin-bottom:8px;color:var(--muted)}
 
-    button {
-      background: #7fa7ff;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+  .dropzone{border:1px dashed rgba(0,0,0,0.06);padding:10px;border-radius:10px;background:transparent;display:flex;align-items:center;gap:12px}
+  input[type=file]{display:block;width:100%}
+  .preview{width:100%;max-height:220px;object-fit:contain;border-radius:10px;background:transparent;margin-top:8px;border:1px solid rgba(0,0,0,0.03);padding:6px}
 
-    button:hover {
-      background: #5f91ff;
-    }
+  .flex{display:flex;gap:12px;align-items:center}
+  button{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:0;color:var(--btn-text);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+  button.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);font-weight:600}
 
-    .preview {
-      width: 100%;
-      max-height: 240px;
-      object-fit: contain;
-      border-radius: 8px;
-      background: #fff;
-      margin-top: 8px;
-    }
+  .note{font-size:0.9rem;color:var(--muted);margin-top:12px;text-align:center}
 
-    .result {
-      text-align: center;
-      margin-top: 10px;
-    }
+  .right .preview-block{display:flex;flex-direction:column;gap:12px}
+  .preview-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:10px;border-radius:10px}
+  .small{font-size:0.9rem;color:var(--muted)}
+  .download{display:inline-block;margin-top:8px;color:var(--text);font-weight:700;text-decoration:none;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.06)}
 
-    .note {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #666;
-      margin-top: 25px;
-    }
+  footer{margin-top:24px;color:var(--muted);font-size:0.9rem}
 
-    footer {
-      text-align: center;
-      color: #777;
-      font-size: 0.85rem;
-      margin: 20px 0;
-    }
-
-    a.download {
-      display: inline-block;
-      margin-top: 8px;
-      color: #2a68d8;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 768px) {
-      .row {
-        flex-direction: column;
-      }
-    }
-  </style>
+  @media(max-width:980px){ .container{grid-template-columns:1fr; } header{flex-direction:column;align-items:flex-start;gap:12px} .header-right{margin-left:0} }
+</style>
 </head>
-
 <body>
-  <header>🖼️ Cloud Image Steganography — LSB</header>
 
-  <div class="container">
-    <h2>Image Steganography — Cloud Demo</h2>
-    <p class="note">Frontend hosted on GitHub Pages • Backend hosted on Render</p>
-
-    <div class="row">
-      <!-- ENCODE -->
-      <div class="col">
-        <h3>🔐 Encode (Hide Secret)</h3>
-        <label>Cover Image</label>
-        <input type="file" id="cover-input" accept="image/*" />
-        <img id="cover-preview" class="preview" alt="Cover Preview" />
-
-        <label>Secret Image</label>
-        <input type="file" id="secret-input" accept="image/*" />
-        <img id="secret-preview" class="preview" alt="Secret Preview" />
-
-        <div style="margin-top:15px;text-align:center;">
-          <button id="encode-btn">Encode & Upload</button>
-        </div>
-
-        <div class="result" id="encode-result"></div>
-      </div>
-
-      <!-- DECODE -->
-      <div class="col">
-        <h3>🧩 Decode (Reveal Secret)</h3>
-        <label>Stego Image</label>
-        <input type="file" id="stego-input" accept="image/*" />
-        <img id="stego-preview" class="preview" alt="Stego Preview" />
-
-        <div style="margin-top:15px;text-align:center;">
-          <button id="decode-btn">Decode Secret</button>
-        </div>
-
-        <div class="result" id="decode-result"></div>
-      </div>
-    </div>
-
-    <p class="note" style="margin-top:30px;">
-      Backend URL: <b id="backend-url">https://stego-backend-l72r.onrender.com</b>
-    </p>
+<header>
+  <div class="logo">SV</div>
+  <div>
+    <h1>StegoVision</h1>
+    <div class="small">Cloud Image Steganography — Light & Dark</div>
   </div>
 
-  <footer>
-    © 2025 • Built by Aryan Patel • LSB Steganography Cloud Project
-  </footer>
+  <div class="header-right">
+    <div class="small">Theme</div>
+    <div class="theme-toggle" title="Toggle theme (light / dark)">
+      <div id="themeSwitch" class="theme-switch" role="switch" aria-checked="false">
+        <div id="themeKnob" class="theme-knob"></div>
+      </div>
+    </div>
+  </div>
+</header>
 
-  <script>
-    const BACKEND = "https://stego-backend-l72r.onrender.com";
+<div class="container">
+  <!-- main -->
+  <div class="panel">
+    <h2>Encode & Decode</h2>
 
-    function previewImage(input, previewId) {
-      const file = input.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => document.getElementById(previewId).src = e.target.result;
-      reader.readAsDataURL(file);
+    <div class="col">
+      <label>Cover Image</label>
+      <input id="coverFile" type="file" accept="image/*" />
+      <img id="coverPreview" class="preview" alt="cover preview" />
+    </div>
+
+    <div class="col">
+      <label>Secret Image</label>
+      <input id="secretFile" type="file" accept="image/*" />
+      <img id="secretPreview" class="preview" alt="secret preview" />
+    </div>
+
+    <div class="flex" style="margin-top:12px">
+      <button id="encodeBtn">Encode → Upload</button>
+      <button id="downloadStegoBtn" class="ghost" style="display:none">Download stego</button>
+    </div>
+
+    <hr style="margin:14px 0;border:none;border-top:1px solid rgba(0,0,0,0.04)">
+
+    <div class="col">
+      <label>Stego Image</label>
+      <input id="stegoFile" type="file" accept="image/*" />
+      <img id="stegoPreview" class="preview" alt="stego preview" />
+    </div>
+
+    <div class="flex" style="margin-top:12px">
+      <button id="decodeBtn">Decode → Upload</button>
+      <button id="downloadExtractBtn" class="ghost" style="display:none">Download extracted</button>
+    </div>
+
+    <div class="note">Backend: <strong id="backendUrl">https://stego-backend-l72r.onrender.com</strong></div>
+  </div>
+
+  <!-- right column -->
+  <div class="panel right">
+    <div class="preview-block">
+      <div class="preview-card">
+        <div class="small">Stego Output</div>
+        <img id="stegoOut" class="preview" alt="stego output" />
+        <div id="stegoLinks" style="margin-top:8px"></div>
+      </div>
+
+      <div class="preview-card">
+        <div class="small">Extracted Secret</div>
+        <img id="extractedOut" class="preview" alt="extracted output" />
+        <div id="extractedLinks" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2025 • Aryan Patel — StegoVision</footer>
+
+<script>
+  const BACKEND = document.getElementById('backendUrl').textContent.trim();
+
+  // Theme toggle logic
+  const themeSwitch = document.getElementById('themeSwitch');
+  const themeKnob = document.getElementById('themeKnob');
+  // Default is light pastel (no body class). If user prefers dark from previous session, restore.
+  if (localStorage.getItem('stegov_theme') === 'dark') {
+    document.body.classList.add('theme-dark');
+    themeKnob.style.transform = 'translateX(20px)';
+    themeSwitch.setAttribute('aria-checked','true');
+  }
+  themeSwitch.addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('theme-dark');
+    if (isDark) {
+      themeKnob.style.transform = 'translateX(20px)';
+      themeSwitch.setAttribute('aria-checked','true');
+      localStorage.setItem('stegov_theme','dark');
+    } else {
+      themeKnob.style.transform = 'translateX(0px)';
+      themeSwitch.setAttribute('aria-checked','false');
+      localStorage.setItem('stegov_theme','light');
     }
+  });
 
-    document.getElementById("cover-input").addEventListener("change", e => previewImage(e.target, "cover-preview"));
-    document.getElementById("secret-input").addEventListener("change", e => previewImage(e.target, "secret-preview"));
-    document.getElementById("stego-input").addEventListener("change", e => previewImage(e.target, "stego-preview"));
+  // Helpers
+  function previewInput(fileInput, imgElId) {
+    const f = fileInput.files && fileInput.files[0];
+    const el = document.getElementById(imgElId);
+    if (!f) { el.src=''; el.style.display='none'; return; }
+    const reader = new FileReader();
+    reader.onload = e => { el.src = e.target.result; el.style.display='block'; };
+    reader.readAsDataURL(f);
+  }
 
-    async function uploadFiles(url, files) {
-      const fd = new FormData();
-      for (const [k, v] of Object.entries(files)) fd.append(k, v);
-      const res = await fetch(url, { method: "POST", body: fd });
-      if (!res.ok) {
-        const msg = await res.text();
-        throw new Error(msg);
-      }
-      return await res.blob();
+  document.getElementById('coverFile').addEventListener('change', e => previewInput(e.target,'coverPreview'));
+  document.getElementById('secretFile').addEventListener('change', e => previewInput(e.target,'secretPreview'));
+  document.getElementById('stegoFile').addEventListener('change', e => previewInput(e.target,'stegoPreview'));
+
+  // Upload helpers
+  async function postFiles(endpoint, files) {
+    const fd = new FormData();
+    for (const k in files) if (files[k]) fd.append(k, files[k]);
+    const res = await fetch(BACKEND + endpoint, { method: 'POST', body: fd });
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(txt || 'Server error');
     }
+    return await res.blob();
+  }
 
-    document.getElementById("encode-btn").addEventListener("click", async () => {
-      const cover = document.getElementById("cover-input").files[0];
-      const secret = document.getElementById("secret-input").files[0];
-      const resultDiv = document.getElementById("encode-result");
-      resultDiv.innerHTML = "⏳ Encoding...";
-      try {
-        const blob = await uploadFiles(BACKEND + "/encode", { cover, secret });
-        const url = URL.createObjectURL(blob);
-        resultDiv.innerHTML = `
-          ✅ Done!<br>
-          <a class="download" href="${url}" download="stego.png">⬇️ Download Stego Image</a><br>
-          <img src="${url}" class="preview" alt="Stego Image" />
-        `;
-      } catch (err) {
-        resultDiv.innerHTML = `<span style="color:crimson;">❌ ${err.message}</span>`;
-      }
-    });
+  // Encode flow
+  let lastStegoBlob = null;
+  document.getElementById('encodeBtn').addEventListener('click', async () => {
+    const cover = document.getElementById('coverFile').files[0];
+    const secret = document.getElementById('secretFile').files[0];
+    if (!cover || !secret) { alert('Select both cover and secret images'); return; }
+    try {
+      document.getElementById('encodeBtn').textContent = 'Uploading...';
+      const blob = await postFiles('/encode', { cover, secret });
+      lastStegoBlob = blob;
+      const url = URL.createObjectURL(blob);
+      document.getElementById('stegoOut').src = url;
+      document.getElementById('stegoLinks').innerHTML = `<a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a>`;
+      document.getElementById('downloadStegoBtn').style.display='inline-block';
+      document.getElementById('downloadStegoBtn').onclick = () => { const a=document.createElement('a'); a.href=url; a.download='stego.png'; a.click(); };
+    } catch (err) {
+      alert('Encode failed: ' + (err.message || err));
+    } finally {
+      document.getElementById('encodeBtn').textContent = 'Encode → Upload';
+    }
+  });
 
-    document.getElementById("decode-btn").addEventListener("click", async () => {
-      const stego = document.getElementById("stego-input").files[0];
-      const resultDiv = document.getElementById("decode-result");
-      resultDiv.innerHTML = "⏳ Decoding...";
-      try {
-        const blob = await uploadFiles(BACKEND + "/decode", { stego });
-        const url = URL.createObjectURL(blob);
-        resultDiv.innerHTML = `
-          ✅ Secret Extracted!<br>
-          <a class="download" href="${url}" download="extracted.png">⬇️ Download Extracted Image</a><br>
-          <img src="${url}" class="preview" alt="Extracted Secret" />
-        `;
-      } catch (err) {
-        resultDiv.innerHTML = `<span style="color:crimson;">❌ ${err.message}</span>`;
-      }
-    });
-  </script>
+  // Decode flow
+  let lastExtractedBlob = null;
+  document.getElementById('decodeBtn').addEventListener('click', async () => {
+    const stego = document.getElementById('stegoFile').files[0];
+    if (!stego) { alert('Select a stego image to decode'); return; }
+    try {
+      document.getElementById('decodeBtn').textContent = 'Uploading...';
+      const blob = await postFiles('/decode', { stego });
+      lastExtractedBlob = blob;
+      const url = URL.createObjectURL(blob);
+      document.getElementById('extractedOut').src = url;
+      document.getElementById('extractedLinks').innerHTML = `<a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a>`;
+      document.getElementById('downloadExtractBtn').style.display='inline-block';
+    } catch (err) {
+      alert('Decode failed: ' + (err.message || err));
+    } finally {
+      document.getElementById('decodeBtn').textContent = 'Decode → Upload';
+    }
+  });
+
+  // Hook absolute endpoints (so fetch uses full URL)
+  // NOTE: backend path appended in postFiles; we need to set full URL in postFiles -> done.
+
+</script>
 </body>
 </html>
