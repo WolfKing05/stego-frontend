@@ -1,12 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>StegoVision — History Enabled</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>StegoVision — Blue Theme + Left Sliding History</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+  /* -------------------------
+     Base palettes (light + dark)
+     -------------------------*/
   :root{
+    /* LIGHT (default) */
     --bg: linear-gradient(180deg,#f3f8ff,#eaf4ff);
     --card: #ffffff;
     --text: #02223f;
@@ -14,10 +18,13 @@
     --accent: #008fd6;
     --accent-2: #5fc5ff;
     --soft: #dff4ff;
-    --shadow: 0 10px 28px rgba(3,22,50,0.08);
+    --shadow-base: 0 10px 28px rgba(3,22,50,0.08); /* normal shadow for light */
+    /* special right+bottom "dark-blue" glow for light theme */
+    --special-shadow-light: 10px 12px 30px rgba(2,34,63,0.12), 6px 8px 18px rgba(2,34,63,0.06);
     --btn-text: #ffffff;
-    --accent-glow: rgba(0,143,214,0.18);
+    --accent-glow: rgba(0,143,214,0.12);
   }
+
   body.dark {
     --bg: linear-gradient(180deg,#061020,#071428);
     --card: #0d1a2a;
@@ -26,65 +33,106 @@
     --accent: #00c2ff;
     --accent-2: #3ad1ff;
     --soft: rgba(255,255,255,0.03);
-    --shadow: 0 12px 36px rgba(0,0,0,0.7);
+    --shadow-base: 0 10px 36px rgba(0,0,0,0.28); /* normal shadow for dark */
+    /* special right+bottom neon cyan glow for dark theme */
+    --special-shadow-dark: 12px 14px 36px rgba(0,240,255,0.22), 6px 8px 22px rgba(0,140,255,0.10);
     --btn-text: #001;
     --accent-glow: rgba(0,194,255,0.16);
   }
 
+  /* -------------------------
+     Layout & basic styles
+     -------------------------*/
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1200px;margin:20px auto;padding:18px}
+  .wrap{max-width:1180px;margin:24px auto;padding:18px;position:relative}
 
-  header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow-base);transition:box-shadow .25s, background .25s}
   .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--btn-text);font-size:18px;box-shadow:var(--accent-glow)}
   header h1{margin:0;font-size:1.15rem}
   .header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
 
   .theme-pill{display:inline-flex;align-items:center;gap:10px;background:var(--soft);padding:6px;border-radius:999px;border:1px solid rgba(0,0,0,0.04)}
-  .theme-btn{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow)}
+  .theme-btn{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow);transition:box-shadow .2s, transform .12s}
   .theme-btn .dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.9);box-shadow:0 2px 6px rgba(0,0,0,0.12)}
 
-  .controls-row{display:flex;gap:8px;align-items:center;margin-top:12px;justify-content:space-between}
-  .clear-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
+  /* main area */
+  .page{display:flex;gap:20px;margin-top:18px}
+  /* left sliding history width */
+  .history-drawer { position:fixed; left:-360px; top:24px; width:340px; bottom:24px; z-index:60; transition:left .32s cubic-bezier(.2,.9,.2,1); }
+  .history-drawer.open { left:18px; } /* slides in */
+  .history-panel{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow-base);height:100%;overflow:auto}
+  .history-handle{position:fixed;left:18px;top:50%;transform:translateY(-50%);z-index:80;cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);padding:10px;border-radius:12px;box-shadow:0 8px 24px var(--accent-glow)}
+  .history-open .history-handle{left:360px} /* push handle when open (visual) */
 
-  .main-grid{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:14px}
-  .left-col{display:flex;flex-direction:column;gap:18px}
-  .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:var(--shadow);transition:transform .12s}
-  .card:hover{transform:translateY(-6px)}
-  h3{margin:0;color:var(--accent-2);text-align:left}
+  .main-cards{flex:1;display:flex;flex-direction:column;gap:18px;margin-left:0;transition:margin-left .32s}
+  .main-cards.shifted{margin-left:360px} /* shift content right when drawer open (optional) */
+
+  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow-base);transition:transform .14s, box-shadow .14s;flex:1}
+  .card:hover{transform:translateY(-6px);}
+
+  h3{margin-top:0;color:var(--accent-2);text-align:center}
   label{display:block;margin-top:12px;margin-bottom:8px;font-weight:700;color:var(--muted)}
-  input[type=file]{width:100%;background:var(--soft);border-radius:8px;padding:8px;border:1px solid rgba(0,0,0,0.04);color:var(--muted)}
-  .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:260px;object-fit:contain}
-  .btn{margin-top:12px;width:100%;padding:10px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:var(--accent-glow)}
+  input[type=file]{width:100%;background:var(--soft);border:1px solid rgba(0,0,0,0.05);padding:10px;border-radius:8px;color:var(--muted)}
+  input[type=file]::-webkit-file-upload-button{background:transparent;border:0;padding:6px 8px;color:var(--accent);font-weight:700;cursor:pointer;border-radius:6px}
+  .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:300px;object-fit:contain;box-shadow:0 8px 20px rgba(6,30,60,0.04)}
+  .btn{margin-top:16px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:var(--accent-glow);transition:transform .12s, box-shadow .12s}
   .result{text-align:center;margin-top:12px}
   .download{display:inline-block;margin-top:8px;color:var(--accent-2);font-weight:700;text-decoration:none}
-  .file-info{font-size:0.86rem;color:var(--muted);margin-top:6px}
+  footer{margin-top:28px;text-align:center;color:var(--muted);font-size:0.9rem}
 
   /* progress + spinner */
   .progress-wrap{height:6px;background:rgba(0,0,0,0.04);border-radius:6px;overflow:hidden;margin-top:10px;display:none}
   .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 300ms ease}
-  .spinner{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);border-top-color:var(--accent-2);animation:spin 1s linear infinite;vertical-align:middle;margin-left:8px;display:none}
+  .spinner{display:inline-block;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);border-top-color:var(--accent-2);animation:spin 1s linear infinite;vertical-align:middle;margin-left:8px;display:none}
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* toast */
   .toast{position:fixed;right:18px;bottom:18px;padding:10px 14px;border-radius:10px;background:rgba(3,22,50,0.95);color:#dff6ff;box-shadow:0 6px 24px rgba(0,0,0,0.4);opacity:0;transform:translateY(12px);transition:all .28s ease;pointer-events:none}
   .toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
 
-  /* history panel */
-  .history-panel{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow);max-height:72vh;overflow:auto}
+  .file-info{font-size:0.85rem;color:var(--muted);margin-top:6px}
+  .controls-row{display:flex;gap:8px;align-items:center}
+  .clear-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
+
+  /* history list */
   .history-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
-  .history-list{display:flex;flex-direction:column;gap:8px}
-  .hist-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
-  .hist-thumb{width:68px;height:48px;object-fit:cover;border-radius:6px;background:#111}
+  .history-list{display:flex;flex-direction:column;gap:10px}
+  .hist-item{display:flex;gap:8px;align-items:center;padding:8px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
+  .hist-thumb{width:84px;height:54px;object-fit:cover;border-radius:6px;background:#111}
   .hist-meta{flex:1;font-size:0.86rem;color:var(--muted)}
-  .hist-meta b{color:var(--text);display:block}
   .hist-actions{display:flex;gap:6px}
   .icon-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--muted)}
   .badge{padding:4px 8px;border-radius:999px;font-size:0.75rem;font-weight:700}
   .badge.encode{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#001}
   .badge.decode{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted)}
 
-  @media(max-width:980px){ .main-grid{grid-template-columns:1fr} .history-panel{order:2} }
+  /* -------------------------
+     THE SPECIAL RULE:
+     Only the last two cards in .main-cards get the two-sided (right+bottom) blue shadow on hover.
+     -------------------------*/
+
+  /* reset hover for all cards to keep base shadow unless special */
+  .card:hover { box-shadow: var(--shadow-base); }
+
+  /* target the last two cards inside .main-cards */
+  .main-cards .card:nth-last-child(-n+2):hover {
+    /* pick the theme-appropriate special shadow variable */
+    box-shadow: var(--special-shadow-dark);
+  }
+
+  /* BUT when not in dark (i.e., default light), use the light special shadow instead */
+  body:not(.dark) .main-cards .card:nth-last-child(-n+2):hover {
+    box-shadow: var(--special-shadow-light);
+  }
+
+  @media(max-width:980px){
+    .history-drawer{left: -100%; width:100%; top:14px; bottom:14px}
+    .history-drawer.open{left:0}
+    .history-handle{left:8px}
+    .main-cards.shifted{margin-left:0}
+    .wrap{padding:12px}
+  }
 </style>
 </head>
 <body>
@@ -94,338 +142,306 @@
     <div class="logo">SV</div>
     <div>
       <h1>StegoVision</h1>
-      <div class="sub" style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography — History Enabled</div>
+      <div style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography — Blue theme</div>
     </div>
 
     <div class="header-right">
       <div class="theme-pill" role="group" aria-label="Theme toggle">
         <div class="label">Theme</div>
-        <button id="themeBtn" class="theme-btn" title="Toggle theme"><span class="dot"></span><span id="themeText">Light</span></button>
+        <button id="themeBtn" class="theme-btn" title="Toggle theme">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="themeText">Light</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <div class="controls-row">
-    <button id="clearAll" class="clear-btn">🧹 Clear All</button>
-    <div style="font-size:0.92rem;color:var(--muted)"><strong>Backend:</strong> <span id="backendUrl">https://stego-backend-l72r.onrender.com</span></div>
+  <!-- Left sliding history drawer + handle -->
+  <div id="historyDrawer" class="history-drawer" aria-hidden="true">
+    <div class="history-panel" role="region" aria-label="History panel">
+      <div class="history-head">
+        <div>
+          <strong>History</strong>
+          <div style="font-size:0.86rem;color:var(--muted)">Recent encoded / decoded</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button id="clearHistory" class="icon-btn" title="Clear history">Clear</button>
+          <button id="collapseHistory" class="icon-btn" title="Close">Close</button>
+        </div>
+      </div>
+      <div id="historyList" class="history-list" aria-live="polite"></div>
+      <div id="historyEmpty" style="color:var(--muted);font-size:0.9rem;margin-top:8px">No history yet — encode or decode to create entries.</div>
+    </div>
   </div>
 
-  <div class="main-grid">
-    <!-- LEFT: encode/decode -->
-    <div class="left-col">
+  <button id="historyHandle" class="history-handle" title="Open history (H)">History</button>
+
+  <div class="page">
+    <div id="mainCards" class="main-cards">
       <div class="card" id="cardEncode">
         <h3>🔐 Encode (Hide Secret)</h3>
+
         <label for="cover">Cover Image</label>
         <input id="cover" type="file" accept="image/*" />
         <div id="coverInfo" class="file-info"></div>
-        <img id="coverPreview" class="preview" alt="cover preview" style="display:none"/>
+        <img id="coverPreview" class="preview" alt="cover preview" style="display:none" />
 
         <label for="secret">Secret Image</label>
         <input id="secret" type="file" accept="image/*" />
         <div id="secretInfo" class="file-info"></div>
-        <img id="secretPreview" class="preview" alt="secret preview" style="display:none"/>
+        <img id="secretPreview" class="preview" alt="secret preview" style="display:none" />
 
         <div class="progress-wrap" id="encodeProgress"><div class="progress-bar" id="encodeBar"></div></div>
         <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
           <button id="encodeBtn" class="btn">Encode Image</button>
           <div class="spinner" id="encodeSpinner" title="Processing"></div>
         </div>
+
         <div id="encodeResult" class="result"></div>
       </div>
 
       <div class="card" id="cardDecode">
         <h3>🧩 Decode (Reveal Secret)</h3>
+
         <label for="stego">Stego Image</label>
         <input id="stego" type="file" accept="image/*" />
         <div id="stegoInfo" class="file-info"></div>
-        <img id="stegoPreview" class="preview" alt="stego preview" style="display:none"/>
+        <img id="stegoPreview" class="preview" alt="stego preview" style="display:none" />
 
         <div class="progress-wrap" id="decodeProgress"><div class="progress-bar" id="decodeBar"></div></div>
         <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
           <button id="decodeBtn" class="btn">Decode Image</button>
           <div class="spinner" id="decodeSpinner" title="Processing"></div>
         </div>
+
         <div id="decodeResult" class="result"></div>
       </div>
-    </div>
 
-    <!-- RIGHT: history panel -->
-    <aside class="history-panel">
-      <div class="history-head">
-        <div><strong style="font-size:1rem">History</strong><div style="font-size:0.85rem;color:var(--muted)">Recent encoded/decoded images</div></div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="toggleHistory" class="icon-btn">Collapse</button>
-          <button id="clearHistory" class="icon-btn">Clear</button>
-        </div>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+        <button id="clearAll" class="clear-btn">🧹 Clear All</button>
+        <div style="margin-left:auto;color:var(--muted)"><strong>Backend:</strong> <span id="backendUrl">https://stego-backend-l72r.onrender.com</span></div>
       </div>
-
-      <div id="historyList" class="history-list" aria-live="polite"></div>
-      <div id="historyEmpty" style="color:var(--muted);font-size:0.9rem">No history yet — run an encode or decode.</div>
-    </aside>
+    </div>
   </div>
 
-  <footer style="margin-top:18px">⚙️ Backend: <strong id="backendUrlFooter">https://stego-backend-l72r.onrender.com</strong> • © 2025 Aryan Patel</footer>
+  <footer style="margin-top:20px">© 2025 Aryan Patel</footer>
 </div>
 
+<!-- toast -->
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* ---------------------------
-   Config & constants
-   --------------------------- */
-const BACKEND = document.getElementById('backendUrl').textContent.trim();
-document.getElementById('backendUrlFooter').textContent = BACKEND;
+  // Backend
+  const BACKEND = document.getElementById('backendUrl').textContent.trim();
 
-const HISTORY_KEY = 'stego_history_v3';
-const HISTORY_LIMIT = 12;
-
-/* ---------------------------
-   Theme toggle
-   --------------------------- */
-const themeBtn = document.getElementById('themeBtn');
-const themeText = document.getElementById('themeText');
-function applyTheme(isDark){
-  if(isDark){ document.body.classList.add('dark'); themeText.textContent = 'Dark'; }
-  else{ document.body.classList.remove('dark'); themeText.textContent = 'Light'; }
-}
-const saved = localStorage.getItem('stegov_theme') || 'light';
-applyTheme(saved === 'dark');
-themeBtn.addEventListener('click', ()=>{
-  const isDark = !document.body.classList.contains('dark');
-  localStorage.setItem('stegov_theme', isDark ? 'dark' : 'light');
-  applyTheme(isDark);
-});
-
-/* ---------------------------
-   Toast
-   --------------------------- */
-const toastEl = document.getElementById('toast');
-let toastTimer = 0;
-function showToast(msg, isError=false){
-  toastEl.textContent = msg;
-  toastEl.style.background = isError ? 'rgba(150,20,20,0.95)' : 'rgba(3,22,50,0.95)';
-  toastEl.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 2400);
-}
-
-/* ---------------------------
-   File preview + info helpers
-   --------------------------- */
-async function showFileInfo(file, infoEl){
-  if(!file){ infoEl.textContent=''; return; }
-  const kb = Math.round(file.size/1024);
-  const type = file.type ? file.type.split('/').pop().toUpperCase() : 'FILE';
-  const url = URL.createObjectURL(file);
-  const img = new Image();
-  img.onload = () => { infoEl.textContent = `${img.naturalWidth}×${img.naturalHeight} • ${kb} KB • ${type}`; URL.revokeObjectURL(url); };
-  img.onerror = ()=>{ infoEl.textContent = `${kb} KB • ${type}`; URL.revokeObjectURL(url); };
-  img.src = url;
-}
-function wirePreview(inputId, previewId, infoId){
-  const input = document.getElementById(inputId);
-  const preview = document.getElementById(previewId);
-  const info = document.getElementById(infoId);
-  input.addEventListener('change', (e)=>{
-    const f = e.target.files && e.target.files[0];
-    if(!f){ preview.src=''; preview.style.display='none'; info.textContent=''; return; }
-    showFileInfo(f, info);
-    const r = new FileReader();
-    r.onload = ev => { preview.src = ev.target.result; preview.style.display='block'; };
-    r.readAsDataURL(f);
-  });
-}
-wirePreview('cover','coverPreview','coverInfo');
-wirePreview('secret','secretPreview','secretInfo');
-wirePreview('stego','stegoPreview','stegoInfo');
-
-/* ---------------------------
-   Progress & spinners
-   --------------------------- */
-function setProgress(which, pct){
-  const bar = document.getElementById(which + 'Bar');
-  const wrap = document.getElementById(which + 'Progress');
-  if(pct <= 0){ wrap.style.display = 'none'; bar.style.width = '0%'; }
-  else { wrap.style.display = 'block'; bar.style.width = pct + '%'; }
-}
-function startSpinner(which){ document.getElementById(which + 'Spinner').style.display = 'inline-block'; }
-function stopSpinner(which){ document.getElementById(which + 'Spinner').style.display = 'none'; }
-
-/* ---------------------------
-   Simple fetch with fake progress (works with your backend)
-   --------------------------- */
-async function postWithProgress(path, files, which){
-  const fd = new FormData();
-  Object.entries(files).forEach(([k,v])=> v && fd.append(k,v));
-  setProgress(which, 6);
-  startSpinner(which);
-  let fake = 6;
-  const iv = setInterval(()=>{ fake = Math.min(92, fake + Math.random()*8); setProgress(which, Math.round(fake)); }, 200);
-
-  const res = await fetch(BACKEND + path, { method:'POST', body: fd });
-  clearInterval(iv);
-  setProgress(which, 92);
-  stopSpinner(which);
-  if(!res.ok){
-    const txt = await res.text().catch(()=>res.statusText);
-    setProgress(which,0);
-    throw new Error(txt || 'Server error');
+  /* Theme logic */
+  const themeBtn = document.getElementById('themeBtn');
+  const themeText = document.getElementById('themeText');
+  function applyTheme(isDark){
+    if(isDark){ document.body.classList.add('dark'); themeText.textContent='Dark'; }
+    else{ document.body.classList.remove('dark'); themeText.textContent='Light'; }
   }
-  setProgress(which,100);
-  await new Promise(r=>setTimeout(r,180));
-  setProgress(which,0);
-  const blob = await res.blob();
-  return blob;
-}
+  const savedTheme = localStorage.getItem('stegov_theme') || 'light';
+  applyTheme(savedTheme === 'dark');
+  themeBtn.addEventListener('click', ()=> {
+    const isDark = !document.body.classList.contains('dark');
+    localStorage.setItem('stegov_theme', isDark ? 'dark' : 'light');
+    applyTheme(isDark);
+  });
 
-/* ---------------------------
-   History storage: maintain array of {id,type,time,name,dataUrl}
-   --------------------------- */
-function loadHistory(){
-  try{
-    const raw = localStorage.getItem(HISTORY_KEY);
-    return raw ? JSON.parse(raw) : [];
-  }catch(e){ return []; }
-}
-function saveHistory(arr){
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(arr));
-  renderHistory();
-}
-function pushHistory(entry){
-  const arr = loadHistory();
-  arr.push(entry);
-  while(arr.length > HISTORY_LIMIT) arr.shift();
-  saveHistory(arr);
-}
-function removeHistoryById(id){
-  const arr = loadHistory().filter(x=>x.id !== id);
-  saveHistory(arr);
-}
+  /* Toast */
+  const toastEl = document.getElementById('toast'); let toastTimer = null;
+  function showToast(msg, isError=false){
+    toastEl.textContent = msg;
+    toastEl.style.background = isError ? 'rgba(150,20,20,0.95)' : 'rgba(3,22,50,0.95)';
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 2500);
+  }
 
-/* ---------------------------
-   Render history UI
-   --------------------------- */
-const historyListEl = document.getElementById('historyList');
-const historyEmptyEl = document.getElementById('historyEmpty');
-function renderHistory(){
-  const arr = loadHistory();
-  historyListEl.innerHTML = '';
-  if(arr.length === 0){ historyEmptyEl.style.display = 'block'; return; }
-  historyEmptyEl.style.display = 'none';
-  // reverse so newest appear on top
-  arr.slice().reverse().forEach(item=>{
-    const div = document.createElement('div'); div.className = 'hist-item';
-    div.innerHTML = `
-      <img class="hist-thumb" src="${item.dataUrl}" alt="${item.type}">
-      <div class="hist-meta"><b>${item.name || (item.type==='encode' ? 'stego.png' : 'extracted.png')}</b>
-        <div style="font-size:0.82rem;color:var(--muted)">${new Date(item.time).toLocaleString()} • ${item.type.toUpperCase()}</div>
-      </div>
-      <div class="hist-actions">
-        <a class="icon-btn" target="_blank" rel="noopener" href="${item.dataUrl}" download="${item.name || (item.type==='encode' ? 'stego.png' : 'extracted.png')}">Download</a>
-        <a class="icon-btn" target="_blank" rel="noopener" href="${item.dataUrl}">Open</a>
-        <button class="icon-btn" data-id="${item.id}">Delete</button>
-      </div>
-    `;
-    // attach delete handler
-    div.querySelector('button[data-id]').addEventListener('click', (e)=>{
-      const id = e.currentTarget.getAttribute('data-id');
-      removeHistoryById(id);
-      showToast('History item removed');
+  /* File preview + info */
+  async function showFileInfo(file, infoEl){
+    if(!file){ infoEl.textContent=''; return; }
+    const kb = Math.round(file.size/1024);
+    const type = file.type ? file.type.split('/').pop().toUpperCase() : 'FILE';
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { infoEl.textContent = `${img.naturalWidth}×${img.naturalHeight} • ${kb} KB • ${type}`; URL.revokeObjectURL(url); };
+    img.onerror = ()=>{ infoEl.textContent = `${kb} KB • ${type}`; URL.revokeObjectURL(url); };
+    img.src = url;
+  }
+  function wirePreview(inputId, previewId, infoId){
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    const info = document.getElementById(infoId);
+    input.addEventListener('change', (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f){ preview.src=''; preview.style.display='none'; info.textContent=''; return; }
+      showFileInfo(f, info);
+      const r = new FileReader();
+      r.onload = ev => { preview.src = ev.target.result; preview.style.display='block'; };
+      r.readAsDataURL(f);
     });
-    historyListEl.appendChild(div);
-  });
-}
-
-/* ---------------------------
-   Helpers to convert blob -> dataURL (for storing thumbnails)
-   --------------------------- */
-function blobToDataURL(blob){
-  return new Promise((res, rej)=>{
-    const fr = new FileReader();
-    fr.onload = ()=> res(fr.result);
-    fr.onerror = ()=> rej(new Error('read error'));
-    fr.readAsDataURL(blob);
-  });
-}
-
-/* ---------------------------
-   Hooks: encode & decode flows
-   --------------------------- */
-document.getElementById('encodeBtn').addEventListener('click', async ()=>{
-  const cover = document.getElementById('cover').files[0];
-  const secret = document.getElementById('secret').files[0];
-  const out = document.getElementById('encodeResult');
-  if(!cover || !secret){ showToast('Select both cover and secret', true); out.innerHTML = '<span style="color:#ff6b6b">Select both images</span>'; return; }
-  out.textContent = '';
-  try{
-    const blob = await postWithProgress('/encode', { cover, secret }, 'encode');
-    const url = URL.createObjectURL(blob);
-    out.innerHTML = `✅ Stego ready<br><a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a><br><img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px" alt="stego">`;
-    showToast('Stego image encoded');
-    // store in history: convert blob -> dataUrl (thumbnail)
-    const dataUrl = await blobToDataURL(blob);
-    pushHistory({ id: 'h_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), type:'encode', time: Date.now(), name: 'stego.png', dataUrl });
-  }catch(err){
-    out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
-    showToast('Encode failed: ' + (err.message||''), true);
-    console.error(err);
   }
-});
+  wirePreview('cover','coverPreview','coverInfo');
+  wirePreview('secret','secretPreview','secretInfo');
+  wirePreview('stego','stegoPreview','stegoInfo');
 
-document.getElementById('decodeBtn').addEventListener('click', async ()=>{
-  const stego = document.getElementById('stego').files[0];
-  const out = document.getElementById('decodeResult');
-  if(!stego){ showToast('Select a stego image', true); out.innerHTML = '<span style="color:#ff6b6b">Select a stego image</span>'; return; }
-  out.textContent = '';
-  try{
-    const blob = await postWithProgress('/decode', { stego }, 'decode');
-    const url = URL.createObjectURL(blob);
-    out.innerHTML = `✅ Secret extracted<br><a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a><br><img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px" alt="extracted">`;
-    showToast('Secret extracted');
-    const dataUrl = await blobToDataURL(blob);
-    pushHistory({ id: 'h_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), type:'decode', time: Date.now(), name: 'extracted.png', dataUrl });
-  }catch(err){
-    out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
-    showToast('Decode failed: ' + (err.message||''), true);
-    console.error(err);
+  /* Progress & spinner helpers */
+  function setProgress(which, pct){
+    const bar = document.getElementById(which + 'Bar'); const wrap = document.getElementById(which + 'Progress');
+    if(pct <= 0){ wrap.style.display='none'; bar.style.width='0%'; }
+    else { wrap.style.display='block'; bar.style.width = pct + '%'; }
   }
-});
+  function startSpinner(which){ document.getElementById(which + 'Spinner').style.display = 'inline-block'; }
+  function stopSpinner(which){ document.getElementById(which + 'Spinner').style.display = 'none'; }
 
-/* ---------------------------
-   Clear all inputs (existing) and clear history buttons
-   --------------------------- */
-document.getElementById('clearAll').addEventListener('click', ()=>{
-  ['cover','secret','stego'].forEach(id=>{ const el=document.getElementById(id); el.value=''; });
-  ['coverPreview','secretPreview','stegoPreview'].forEach(id=>{ const img=document.getElementById(id); img.src=''; img.style.display='none'; });
-  ['coverInfo','secretInfo','stegoInfo','encodeResult','decodeResult'].forEach(id=>{ const el=document.getElementById(id); el.textContent=''; });
-  setProgress('encode',0); setProgress('decode',0); stopSpinner('encode'); stopSpinner('decode');
-  showToast('Cleared');
-});
+  /* Post fetch with fake progress */
+  async function postWithProgress(path, files, which){
+    const fd = new FormData();
+    Object.entries(files).forEach(([k,v])=> v && fd.append(k,v));
+    setProgress(which,6); startSpinner(which);
+    let fake = 6;
+    const iv = setInterval(()=>{ fake = Math.min(92, fake + Math.random()*8); setProgress(which, Math.round(fake)); }, 200);
+    const res = await fetch(BACKEND + path, { method:'POST', body: fd });
+    clearInterval(iv); setProgress(which,92); stopSpinner(which);
+    if(!res.ok){ const txt = await res.text().catch(()=>res.statusText); setProgress(which,0); throw new Error(txt || 'Server error'); }
+    setProgress(which,100); await new Promise(r=>setTimeout(r,180)); setProgress(which,0);
+    const blob = await res.blob(); return blob;
+  }
 
-document.getElementById('clearHistory').addEventListener('click', ()=>{
-  localStorage.removeItem(HISTORY_KEY);
+  /* History (left sliding) */
+  const HISTORY_KEY = 'stego_hist_left_v1', HISTORY_LIMIT = 12;
+  const drawer = document.getElementById('historyDrawer'), handle = document.getElementById('historyHandle'), mainCards = document.getElementById('mainCards');
+  const historyListEl = document.getElementById('historyList'), historyEmptyEl = document.getElementById('historyEmpty');
+
+  function loadHistory(){ try{ const raw = localStorage.getItem(HISTORY_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
+  function saveHistory(arr){ localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); renderHistory(); }
+  function pushHistory(entry){ const arr = loadHistory(); arr.push(entry); while(arr.length > HISTORY_LIMIT) arr.shift(); saveHistory(arr); }
+  function removeHistoryById(id){ const arr = loadHistory().filter(x=>x.id !== id); saveHistory(arr); showToast('Removed history item'); }
+  function clearHistory(){ localStorage.removeItem(HISTORY_KEY); renderHistory(); showToast('History cleared'); }
+
+  function renderHistory(){
+    const arr = loadHistory(); historyListEl.innerHTML = '';
+    if(arr.length === 0){ historyEmptyEl.style.display = 'block'; return; }
+    historyEmptyEl.style.display = 'none';
+    arr.slice().reverse().forEach(item => {
+      const div = document.createElement('div'); div.className = 'hist-item';
+      div.innerHTML = `
+        <img class="hist-thumb" src="${item.dataUrl}" alt="${item.type}">
+        <div class="hist-meta"><b>${item.name || (item.type==='encode' ? 'stego.png' : 'extracted.png')}</b>
+          <div style="font-size:0.82rem;color:var(--muted)">${new Date(item.time).toLocaleString()} • ${item.type.toUpperCase()}</div>
+        </div>
+        <div class="hist-actions">
+          <a class="icon-btn" href="${item.dataUrl}" download="${item.name || (item.type==='encode' ? 'stego.png' : 'extracted.png')}">Download</a>
+          <a class="icon-btn" href="${item.dataUrl}" target="_blank">Open</a>
+          <button class="icon-btn" data-id="${item.id}">Delete</button>
+        </div>
+      `;
+      div.querySelector('button[data-id]').addEventListener('click', e=> removeHistoryById(e.currentTarget.getAttribute('data-id')));
+      historyListEl.appendChild(div);
+    });
+  }
+
+  async function blobToDataURL(blob){
+    return new Promise((res, rej)=>{
+      const fr = new FileReader();
+      fr.onload = ()=> res(fr.result);
+      fr.onerror = ()=> rej(new Error('read error'));
+      fr.readAsDataURL(blob);
+    });
+  }
+
+  /* Wire drawer toggles */
+  function openDrawer(){ drawer.classList.add('open'); document.body.classList.add('history-open'); mainCards.classList.add('shifted'); drawer.setAttribute('aria-hidden','false'); }
+  function closeDrawer(){ drawer.classList.remove('open'); document.body.classList.remove('history-open'); mainCards.classList.remove('shifted'); drawer.setAttribute('aria-hidden','true'); }
+  handle.addEventListener('click', ()=> { drawer.classList.toggle('open'); mainCards.classList.toggle('shifted'); document.body.classList.toggle('history-open'); drawer.setAttribute('aria-hidden', drawer.classList.contains('open') ? 'false' : 'true'); });
+  document.getElementById('collapseHistory').addEventListener('click', closeDrawer);
+  document.getElementById('clearHistory').addEventListener('click', clearHistory);
+  document.addEventListener('keydown', e=> { if(e.key.toLowerCase()==='h') handle.click(); if(e.key==='Escape') closeDrawer(); });
+
+  /* Encode & decode flows */
+  document.getElementById('encodeBtn').addEventListener('click', async ()=>{
+    const cover = document.getElementById('cover').files[0];
+    const secret = document.getElementById('secret').files[0];
+    const out = document.getElementById('encodeResult');
+    if(!cover || !secret){ showToast('Select both cover and secret', true); out.innerHTML = '<span style="color:#ff6b6b">Select both images</span>'; return; }
+    out.textContent = '';
+    try{
+      const blob = await postWithProgress('/encode', { cover, secret }, 'encode');
+      const url = URL.createObjectURL(blob);
+      out.innerHTML = `✅ Stego ready<br><a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a><div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;"></div>`;
+      showToast('Stego image encoded');
+      const dataUrl = await blobToDataURL(blob);
+      pushHistory({ id: 'h_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), type:'encode', time: Date.now(), name:'stego.png', dataUrl });
+      renderHistory();
+    }catch(err){
+      out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`; showToast('Encode failed: ' + (err.message||''), true); console.error(err);
+    }
+  });
+
+  document.getElementById('decodeBtn').addEventListener('click', async ()=>{
+    const stego = document.getElementById('stego').files[0];
+    const out = document.getElementById('decodeResult');
+    if(!stego){ showToast('Select a stego image', true); out.innerHTML = '<span style="color:#ff6b6b">Select a stego image</span>'; return; }
+    out.textContent = '';
+    try{
+      const blob = await postWithProgress('/decode', { stego }, 'decode');
+      const url = URL.createObjectURL(blob);
+      out.innerHTML = `✅ Secret extracted<br><a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a><div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;"></div>`;
+      showToast('Secret extracted');
+      const dataUrl = await blobToDataURL(blob);
+      pushHistory({ id: 'h_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), type:'decode', time: Date.now(), name:'extracted.png', dataUrl });
+      renderHistory();
+    }catch(err){
+      out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`; showToast('Decode failed: ' + (err.message||''), true); console.error(err);
+    }
+  });
+
+  /* Wire previews */
+  function wirePreview(inputId, previewId, infoId){
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    const info = document.getElementById(infoId);
+    input.addEventListener('change', (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f){ preview.src=''; preview.style.display='none'; info.textContent=''; return; }
+      (async ()=>{ // show dims
+        const kb = Math.round(f.size/1024);
+        const type = f.type ? f.type.split('/').pop().toUpperCase() : 'FILE';
+        const url = URL.createObjectURL(f);
+        const img = new Image();
+        img.onload = ()=>{ info.textContent = `${img.naturalWidth}×${img.naturalHeight} • ${kb} KB • ${type}`; URL.revokeObjectURL(url); };
+        img.onerror = ()=>{ info.textContent = `${kb} KB • ${type}`; URL.revokeObjectURL(url); };
+        img.src = url;
+      })();
+      const r = new FileReader();
+      r.onload = ev => { preview.src = ev.target.result; preview.style.display='block'; };
+      r.readAsDataURL(f);
+    });
+  }
+  wirePreview('cover','coverPreview','coverInfo');
+  wirePreview('secret','secretPreview','secretInfo');
+  wirePreview('stego','stegoPreview','stegoInfo');
+
+  /* Clear all */
+  document.getElementById('clearAll').addEventListener('click', ()=>{
+    ['cover','secret','stego'].forEach(id=>{ const el=document.getElementById(id); el.value=''; });
+    ['coverPreview','secretPreview','stegoPreview'].forEach(id=>{ const img=document.getElementById(id); img.src=''; img.style.display='none'; });
+    ['coverInfo','secretInfo','stegoInfo','encodeResult','decodeResult'].forEach(id=>{ const el=document.getElementById(id); el.textContent=''; });
+    setProgress('encode',0); setProgress('decode',0); stopSpinner('encode'); stopSpinner('decode');
+    showToast('Cleared');
+  });
+
+  /* init */
   renderHistory();
-  showToast('History cleared');
-});
 
-/* collapse toggle */
-const toggleHistoryBtn = document.getElementById('toggleHistory');
-let historyCollapsed = false;
-toggleHistoryBtn.addEventListener('click', ()=>{
-  historyCollapsed = !historyCollapsed;
-  document.querySelector('.history-panel').style.display = historyCollapsed ? 'none' : 'block';
-  toggleHistoryBtn.textContent = historyCollapsed ? 'Expand' : 'Collapse';
-});
-
-/* init render */
-renderHistory();
-
-/* small keyboard nicety */
-['cover','secret'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown',(e)=>{ if(e.key === 'Enter') document.getElementById('encodeBtn').click(); });
-});
-document.getElementById('stego').addEventListener('keydown',(e)=>{ if(e.key === 'Enter') document.getElementById('decodeBtn').click(); });
-
+  /* small keyboard niceties */
+  document.addEventListener('keydown', e=>{
+    if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='e'){ document.getElementById('encodeBtn').click(); }
+    if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='d'){ document.getElementById('decodeBtn').click(); }
+    if(e.key.toLowerCase()==='h') handle.click();
+  });
 </script>
 </body>
 </html>
