@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>StegoVision — Blue Theme + Left Sliding History</title>
+<title>StegoVision — Encode / Decode (Two Columns) — Right/Bottom Glow</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   /* -------------------------
-     Base palettes (light + dark)
+     Color system & shadows (light + dark)
      -------------------------*/
   :root{
-    /* LIGHT (default) */
+    /* LIGHT */
     --bg: linear-gradient(180deg,#f3f8ff,#eaf4ff);
     --card: #ffffff;
     --text: #02223f;
@@ -18,14 +18,14 @@
     --accent: #008fd6;
     --accent-2: #5fc5ff;
     --soft: #dff4ff;
-    --shadow-base: 0 10px 28px rgba(3,22,50,0.08); /* normal shadow for light */
+    --shadow-base: 0 10px 28px rgba(3,22,50,0.08);
     /* special right+bottom "dark-blue" glow for light theme */
     --special-shadow-light: 10px 12px 30px rgba(2,34,63,0.12), 6px 8px 18px rgba(2,34,63,0.06);
     --btn-text: #ffffff;
     --accent-glow: rgba(0,143,214,0.12);
   }
 
-  body.dark {
+  body.dark{
     --bg: linear-gradient(180deg,#061020,#071428);
     --card: #0d1a2a;
     --text: #dff6ff;
@@ -33,15 +33,14 @@
     --accent: #00c2ff;
     --accent-2: #3ad1ff;
     --soft: rgba(255,255,255,0.03);
-    --shadow-base: 0 10px 36px rgba(0,0,0,0.28); /* normal shadow for dark */
-    /* special right+bottom neon cyan glow for dark theme */
+    --shadow-base: 0 10px 36px rgba(0,0,0,0.28);
     --special-shadow-dark: 12px 14px 36px rgba(0,240,255,0.22), 6px 8px 22px rgba(0,140,255,0.10);
     --btn-text: #001;
     --accent-glow: rgba(0,194,255,0.16);
   }
 
   /* -------------------------
-     Layout & basic styles
+     Base layout
      -------------------------*/
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
@@ -56,27 +55,28 @@
   .theme-btn{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow);transition:box-shadow .2s, transform .12s}
   .theme-btn .dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.9);box-shadow:0 2px 6px rgba(0,0,0,0.12)}
 
-  /* main area */
+  /* page layout: history drawer left + two-column main area */
   .page{display:flex;gap:20px;margin-top:18px}
-  /* left sliding history width */
+  /* left sliding history */
   .history-drawer { position:fixed; left:-360px; top:24px; width:340px; bottom:24px; z-index:60; transition:left .32s cubic-bezier(.2,.9,.2,1); }
-  .history-drawer.open { left:18px; } /* slides in */
+  .history-drawer.open { left:18px; }
   .history-panel{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow-base);height:100%;overflow:auto}
   .history-handle{position:fixed;left:18px;top:50%;transform:translateY(-50%);z-index:80;cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);padding:10px;border-radius:12px;box-shadow:0 8px 24px var(--accent-glow)}
-  .history-open .history-handle{left:360px} /* push handle when open (visual) */
+  .history-open .history-handle{left:360px}
 
-  .main-cards{flex:1;display:flex;flex-direction:column;gap:18px;margin-left:0;transition:margin-left .32s}
-  .main-cards.shifted{margin-left:360px} /* shift content right when drawer open (optional) */
+  /* main content: two columns for encode/decode */
+  .main-area{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:18px;transition:margin-left .32s}
+  .main-area.shifted{margin-left:360px} /* shift right when drawer open */
 
-  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow-base);transition:transform .14s, box-shadow .14s;flex:1}
+  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow-base);transition:transform .14s, box-shadow .14s;display:flex;flex-direction:column}
   .card:hover{transform:translateY(-6px);}
 
-  h3{margin-top:0;color:var(--accent-2);text-align:center}
-  label{display:block;margin-top:12px;margin-bottom:8px;font-weight:700;color:var(--muted)}
-  input[type=file]{width:100%;background:var(--soft);border:1px solid rgba(0,0,0,0.05);padding:10px;border-radius:8px;color:var(--muted)}
+  h3{margin:0 0 8px;color:var(--accent-2);text-align:left}
+  label{display:block;margin-top:10px;margin-bottom:8px;font-weight:700;color:var(--muted)}
+  input[type=file]{width:100%;background:var(--soft);border:1px solid rgba(0,0,0,0.05);padding:10px;border-radius:8px;color:var(--muted);cursor:pointer}
   input[type=file]::-webkit-file-upload-button{background:transparent;border:0;padding:6px 8px;color:var(--accent);font-weight:700;cursor:pointer;border-radius:6px}
   .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:300px;object-fit:contain;box-shadow:0 8px 20px rgba(6,30,60,0.04)}
-  .btn{margin-top:16px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:var(--accent-glow);transition:transform .12s, box-shadow .12s}
+  .btn{margin-top:14px;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:var(--accent-glow);transition:transform .12s, box-shadow .12s}
   .result{text-align:center;margin-top:12px}
   .download{display:inline-block;margin-top:8px;color:var(--accent-2);font-weight:700;text-decoration:none}
   footer{margin-top:28px;text-align:center;color:var(--muted);font-size:0.9rem}
@@ -92,7 +92,7 @@
   .toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
 
   .file-info{font-size:0.85rem;color:var(--muted);margin-top:6px}
-  .controls-row{display:flex;gap:8px;align-items:center}
+  .controls-row{display:flex;gap:8px;align-items:center; margin-top:12px}
   .clear-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
 
   /* history list */
@@ -108,30 +108,29 @@
   .badge.decode{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted)}
 
   /* -------------------------
-     THE SPECIAL RULE:
-     Only the last two cards in .main-cards get the two-sided (right+bottom) blue shadow on hover.
+     Right+bottom glow rule:
+     Apply special right+bottom shadow ONLY to the last-two cards in the main-area on hover.
+     With two cards (encode+decode) both are targeted — exactly your old behavior.
      -------------------------*/
 
-  /* reset hover for all cards to keep base shadow unless special */
+  /* reset hover box-shadow for all cards to base shadow */
   .card:hover { box-shadow: var(--shadow-base); }
 
-  /* target the last two cards inside .main-cards */
-  .main-cards .card:nth-last-child(-n+2):hover {
-    /* pick the theme-appropriate special shadow variable */
+  /* select last two children of .main-area and apply special glow on hover */
+  .main-area .card:nth-last-child(-n+2):hover {
     box-shadow: var(--special-shadow-dark);
   }
-
-  /* BUT when not in dark (i.e., default light), use the light special shadow instead */
-  body:not(.dark) .main-cards .card:nth-last-child(-n+2):hover {
+  /* but in light theme use the light special */
+  body:not(.dark) .main-area .card:nth-last-child(-n+2):hover {
     box-shadow: var(--special-shadow-light);
   }
 
   @media(max-width:980px){
-    .history-drawer{left: -100%; width:100%; top:14px; bottom:14px}
+    .main-area{grid-template-columns:1fr; margin-left:0}
+    .history-drawer{left:-100%; width:100%; top:14px; bottom:14px}
     .history-drawer.open{left:0}
     .history-handle{left:8px}
-    .main-cards.shifted{margin-left:0}
-    .wrap{padding:12px}
+    .history-open .history-handle{left:100%}
   }
 </style>
 </head>
@@ -142,7 +141,7 @@
     <div class="logo">SV</div>
     <div>
       <h1>StegoVision</h1>
-      <div style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography — Blue theme</div>
+      <div style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography</div>
     </div>
 
     <div class="header-right">
@@ -156,7 +155,7 @@
     </div>
   </header>
 
-  <!-- Left sliding history drawer + handle -->
+  <!-- Left sliding history drawer & handle -->
   <div id="historyDrawer" class="history-drawer" aria-hidden="true">
     <div class="history-panel" role="region" aria-label="History panel">
       <div class="history-head">
@@ -177,7 +176,8 @@
   <button id="historyHandle" class="history-handle" title="Open history (H)">History</button>
 
   <div class="page">
-    <div id="mainCards" class="main-cards">
+    <div id="mainArea" class="main-area">
+      <!-- ENCODE CARD -->
       <div class="card" id="cardEncode">
         <h3>🔐 Encode (Hide Secret)</h3>
 
@@ -196,10 +196,10 @@
           <button id="encodeBtn" class="btn">Encode Image</button>
           <div class="spinner" id="encodeSpinner" title="Processing"></div>
         </div>
-
         <div id="encodeResult" class="result"></div>
       </div>
 
+      <!-- DECODE CARD -->
       <div class="card" id="cardDecode">
         <h3>🧩 Decode (Reveal Secret)</h3>
 
@@ -213,15 +213,14 @@
           <button id="decodeBtn" class="btn">Decode Image</button>
           <div class="spinner" id="decodeSpinner" title="Processing"></div>
         </div>
-
         <div id="decodeResult" class="result"></div>
       </div>
-
-      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-        <button id="clearAll" class="clear-btn">🧹 Clear All</button>
-        <div style="margin-left:auto;color:var(--muted)"><strong>Backend:</strong> <span id="backendUrl">https://stego-backend-l72r.onrender.com</span></div>
-      </div>
     </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+    <button id="clearAll" class="clear-btn">🧹 Clear All</button>
+    <div style="margin-left:auto;color:var(--muted)"><strong>Backend:</strong> <span id="backendUrl">https://stego-backend-l72r.onrender.com</span></div>
   </div>
 
   <footer style="margin-top:20px">© 2025 Aryan Patel</footer>
@@ -231,18 +230,18 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
-  // Backend
+  // Backend base
   const BACKEND = document.getElementById('backendUrl').textContent.trim();
 
-  /* Theme logic */
+  /* Theme */
   const themeBtn = document.getElementById('themeBtn');
   const themeText = document.getElementById('themeText');
   function applyTheme(isDark){
-    if(isDark){ document.body.classList.add('dark'); themeText.textContent='Dark'; }
-    else{ document.body.classList.remove('dark'); themeText.textContent='Light'; }
+    if(isDark){ document.body.classList.add('dark'); themeText.textContent='Dark'; themeBtn.style.boxShadow='0 10px 30px rgba(0,194,255,0.18)'; }
+    else{ document.body.classList.remove('dark'); themeText.textContent='Light'; themeBtn.style.boxShadow='0 8px 20px rgba(2,34,63,0.06)'; }
   }
-  const savedTheme = localStorage.getItem('stegov_theme') || 'light';
-  applyTheme(savedTheme === 'dark');
+  const saved = localStorage.getItem('stegov_theme') || 'light';
+  applyTheme(saved === 'dark');
   themeBtn.addEventListener('click', ()=> {
     const isDark = !document.body.classList.contains('dark');
     localStorage.setItem('stegov_theme', isDark ? 'dark' : 'light');
@@ -256,10 +255,10 @@
     toastEl.style.background = isError ? 'rgba(150,20,20,0.95)' : 'rgba(3,22,50,0.95)';
     toastEl.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 2500);
+    toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 2200);
   }
 
-  /* File preview + info */
+  /* Previews + info */
   async function showFileInfo(file, infoEl){
     if(!file){ infoEl.textContent=''; return; }
     const kb = Math.round(file.size/1024);
@@ -296,7 +295,7 @@
   function startSpinner(which){ document.getElementById(which + 'Spinner').style.display = 'inline-block'; }
   function stopSpinner(which){ document.getElementById(which + 'Spinner').style.display = 'none'; }
 
-  /* Post fetch with fake progress */
+  /* POST with fake progress */
   async function postWithProgress(path, files, which){
     const fd = new FormData();
     Object.entries(files).forEach(([k,v])=> v && fd.append(k,v));
@@ -306,13 +305,13 @@
     const res = await fetch(BACKEND + path, { method:'POST', body: fd });
     clearInterval(iv); setProgress(which,92); stopSpinner(which);
     if(!res.ok){ const txt = await res.text().catch(()=>res.statusText); setProgress(which,0); throw new Error(txt || 'Server error'); }
-    setProgress(which,100); await new Promise(r=>setTimeout(r,180)); setProgress(which,0);
+    setProgress(which,100); await new Promise(r=>setTimeout(r,160)); setProgress(which,0);
     const blob = await res.blob(); return blob;
   }
 
-  /* History (left sliding) */
-  const HISTORY_KEY = 'stego_hist_left_v1', HISTORY_LIMIT = 12;
-  const drawer = document.getElementById('historyDrawer'), handle = document.getElementById('historyHandle'), mainCards = document.getElementById('mainCards');
+  /* History (left drawer) */
+  const HISTORY_KEY = 'stego_history_cols_v1'; const HISTORY_LIMIT = 12;
+  const drawer = document.getElementById('historyDrawer'), handle = document.getElementById('historyHandle'), mainArea = document.getElementById('mainArea');
   const historyListEl = document.getElementById('historyList'), historyEmptyEl = document.getElementById('historyEmpty');
 
   function loadHistory(){ try{ const raw = localStorage.getItem(HISTORY_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
@@ -352,15 +351,19 @@
     });
   }
 
-  /* Wire drawer toggles */
-  function openDrawer(){ drawer.classList.add('open'); document.body.classList.add('history-open'); mainCards.classList.add('shifted'); drawer.setAttribute('aria-hidden','false'); }
-  function closeDrawer(){ drawer.classList.remove('open'); document.body.classList.remove('history-open'); mainCards.classList.remove('shifted'); drawer.setAttribute('aria-hidden','true'); }
-  handle.addEventListener('click', ()=> { drawer.classList.toggle('open'); mainCards.classList.toggle('shifted'); document.body.classList.toggle('history-open'); drawer.setAttribute('aria-hidden', drawer.classList.contains('open') ? 'false' : 'true'); });
+  /* Drawer open/close */
+  function openDrawer(){ drawer.classList.add('open'); document.body.classList.add('history-open'); mainArea.classList.add('shifted'); drawer.setAttribute('aria-hidden','false'); }
+  function closeDrawer(){ drawer.classList.remove('open'); document.body.classList.remove('history-open'); mainArea.classList.remove('shifted'); drawer.setAttribute('aria-hidden','true'); }
+  handle.addEventListener('click', ()=> {
+    const isOpen = drawer.classList.toggle('open');
+    if(isOpen){ mainArea.classList.add('shifted'); document.body.classList.add('history-open'); drawer.setAttribute('aria-hidden','false'); }
+    else { mainArea.classList.remove('shifted'); document.body.classList.remove('history-open'); drawer.setAttribute('aria-hidden','true'); }
+  });
   document.getElementById('collapseHistory').addEventListener('click', closeDrawer);
   document.getElementById('clearHistory').addEventListener('click', clearHistory);
   document.addEventListener('keydown', e=> { if(e.key.toLowerCase()==='h') handle.click(); if(e.key==='Escape') closeDrawer(); });
 
-  /* Encode & decode flows */
+  /* Encode and store history */
   document.getElementById('encodeBtn').addEventListener('click', async ()=>{
     const cover = document.getElementById('cover').files[0];
     const secret = document.getElementById('secret').files[0];
@@ -380,6 +383,7 @@
     }
   });
 
+  /* Decode and store history */
   document.getElementById('decodeBtn').addEventListener('click', async ()=>{
     const stego = document.getElementById('stego').files[0];
     const out = document.getElementById('decodeResult');
@@ -398,33 +402,7 @@
     }
   });
 
-  /* Wire previews */
-  function wirePreview(inputId, previewId, infoId){
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
-    const info = document.getElementById(infoId);
-    input.addEventListener('change', (e)=>{
-      const f = e.target.files && e.target.files[0];
-      if(!f){ preview.src=''; preview.style.display='none'; info.textContent=''; return; }
-      (async ()=>{ // show dims
-        const kb = Math.round(f.size/1024);
-        const type = f.type ? f.type.split('/').pop().toUpperCase() : 'FILE';
-        const url = URL.createObjectURL(f);
-        const img = new Image();
-        img.onload = ()=>{ info.textContent = `${img.naturalWidth}×${img.naturalHeight} • ${kb} KB • ${type}`; URL.revokeObjectURL(url); };
-        img.onerror = ()=>{ info.textContent = `${kb} KB • ${type}`; URL.revokeObjectURL(url); };
-        img.src = url;
-      })();
-      const r = new FileReader();
-      r.onload = ev => { preview.src = ev.target.result; preview.style.display='block'; };
-      r.readAsDataURL(f);
-    });
-  }
-  wirePreview('cover','coverPreview','coverInfo');
-  wirePreview('secret','secretPreview','secretInfo');
-  wirePreview('stego','stegoPreview','stegoInfo');
-
-  /* Clear all */
+  /* Clear all button */
   document.getElementById('clearAll').addEventListener('click', ()=>{
     ['cover','secret','stego'].forEach(id=>{ const el=document.getElementById(id); el.value=''; });
     ['coverPreview','secretPreview','stegoPreview'].forEach(id=>{ const img=document.getElementById(id); img.src=''; img.style.display='none'; });
@@ -433,10 +411,10 @@
     showToast('Cleared');
   });
 
-  /* init */
+  /* init history render */
   renderHistory();
 
-  /* small keyboard niceties */
+  /* keyboard shortcuts */
   document.addEventListener('keydown', e=>{
     if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='e'){ document.getElementById('encodeBtn').click(); }
     if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='d'){ document.getElementById('decodeBtn').click(); }
