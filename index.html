@@ -3,72 +3,88 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>StegoVision — Blue Theme (Light & Dark)</title>
+<title>StegoVision — Blue Theme (Light & Dark) — Directional Shadow</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  /* -------------------------
-     Blue-only palettes:
-     - Light theme: dark navy + neon cyan + soft light blues
-     - Dark theme: deeper navy with neon highlights
-     -------------------------*/
   :root{
-    /* LIGHT (default) */
-    --bg: linear-gradient(180deg,#f3f8ff,#eaf4ff); /* pale sky */
-    --card: #ffffff;                              /* white card */
-    --text: #02223f;                              /* dark navy text */
-    --muted: #4b6b8f;                             /* slate-blue muted */
-    --accent: #008fd6;                            /* neon-ish cyan-blue */
-    --accent-2: #5fc5ff;                          /* lighter cyan */
-    --soft: #dff4ff;                              /* soft panel */
-    /* LIGHT-theme shadow: dark-blue subtle shadow to add depth on pale bg */
-    --shadow: 0 10px 28px rgba(2,34,63,0.08);     /* dark navy shadow (light theme) */
+    /* LIGHT theme base */
+    --bg: linear-gradient(180deg,#f3f8ff,#eaf4ff);
+    --card: #ffffff;
+    --text: #02223f;
+    --muted: #4b6b8f;
+    --accent: #008fd6;
+    --accent-2: #5fc5ff;
+    --soft: #dff4ff;
     --btn-text: #ffffff;
+
+    /* directional shadow colors (light theme = dark-blue) */
+    --lift-shadow-x: 12px;       /* x-offset (right) */
+    --lift-shadow-y: 12px;       /* y-offset (bottom) */
+    --lift-shadow-blur: 24px;
+    --lift-shadow-color-light: rgba(2,34,63,0.10); /* dark-blue subtle */
     --accent-glow: rgba(0,143,214,0.12);
   }
 
-  body.dark {
-    /* DARK theme (blue-only) */
+  body.dark{
     --bg: linear-gradient(180deg,#061020,#071428);
     --card: #0d1a2a;
     --text: #dff6ff;
     --muted: #89b9d9;
-    --accent: #00c2ff;    /* brighter neon in dark theme */
+    --accent: #00c2ff;
     --accent-2: #3ad1ff;
     --soft: rgba(255,255,255,0.03);
-    /* DARK-theme shadow: soft neon blue glow */
-    --shadow: 0 10px 36px rgba(0,180,216,0.18), 0 0 60px rgba(0,140,220,0.08); /* neon blue glow */
     --btn-text: #001;
+
+    /* directional shadow colors (dark theme = neon blue) */
+    --lift-shadow-color-dark: rgba(0,180,216,0.18);
+    --lift-shadow-color-dark-outer: rgba(0,140,220,0.08);
     --accent-glow: rgba(0,194,255,0.16);
   }
 
-  /* base */
+  /* base layout */
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
   .wrap{max-width:1100px;margin:28px auto;padding:18px}
 
-  header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow);transition:box-shadow .25s, background .25s}
+  header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:0 6px 18px rgba(0,0,0,0.06);transition:box-shadow .25s, background .25s}
   .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--btn-text);font-size:18px;box-shadow:var(--accent-glow)}
   header h1{margin:0;font-size:1.15rem}
   .header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
 
-  /* THEME TOGGLE (single button) */
   .theme-pill{display:inline-flex;align-items:center;gap:10px;background:var(--soft);padding:6px;border-radius:999px;border:1px solid rgba(0,0,0,0.04)}
   .theme-btn{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow);transition:box-shadow .2s, transform .12s}
   .theme-btn:active{transform:scale(.99)}
   .theme-btn .dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.9);box-shadow:0 2px 6px rgba(0,0,0,0.12)}
   .theme-pill .label{font-weight:600;color:var(--muted);font-size:0.9rem}
 
-  /* layout */
   .container{display:flex;flex-wrap:wrap;gap:22px;margin-top:18px}
-  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow);flex:1;min-width:320px;max-width:540px;transition:transform .14s, box-shadow .14s}
-  .card:hover{transform:translateY(-6px)}
+  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:0 6px 18px rgba(0,0,0,0.06);flex:1;min-width:320px;max-width:540px;transition:transform .14s, box-shadow .14s}
+  /* default no lift shadow; on hover we move and add directional shadow (right + bottom only) */
+  .card:hover{ transform: translateY(-8px);
+               /* compose a directional shadow: primary colored offset + optional outer glow on dark theme */
+               box-shadow:
+                 /* primary directional shadow (right & bottom) - theme chooses color */
+                 var(--lift-shadow-x) var(--lift-shadow-y) var(--lift-shadow-blur) var(--lift-shadow-color),
+                 /* keep a faint card shadow for subtle depth */
+                 0 4px 10px rgba(0,0,0,0.06);
+             }
+
+  /* We will set --lift-shadow-color dynamically per theme using body.dark or :root values */
+  /* Default (light) lift shadow color variable — map to the color defined above */
+  :root { --lift-shadow-color: var(--lift-shadow-color-light); }
+
+  /* Dark theme mapping: richer neon right+bottom shadow + faint outer */
+  body.dark { 
+    --lift-shadow-color: var(--lift-shadow-color-dark);
+  }
+
+  /* rest of styling */
   h3{margin-top:0;color:var(--accent-2);text-align:center}
   label{display:block;margin-top:12px;margin-bottom:8px;font-weight:700;color:var(--muted)}
   input[type=file]{width:100%;background:var(--soft);border:1px solid rgba(0,0,0,0.05);padding:10px;border-radius:8px;color:var(--muted)}
   input[type=file]::-webkit-file-upload-button{background:transparent;border:0;padding:6px 8px;color:var(--accent);font-weight:700;cursor:pointer;border-radius:6px}
-  .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:300px;object-fit:contain;/* use lighter shadow tuned by theme */box-shadow:0 8px 20px rgba(6,30,60,0.04)}
+  .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:300px;object-fit:contain}
   .btn{margin-top:16px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:var(--accent-glow);transition:transform .12s, box-shadow .12s}
-  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);box-shadow:none;font-weight:700}
   .result{text-align:center;margin-top:12px}
   .download{display:inline-block;margin-top:8px;color:var(--accent-2);font-weight:700;text-decoration:none}
 
@@ -132,10 +148,7 @@
 </div>
 
 <script>
-  // backend from DOM (safe to change later)
   const BACKEND = document.getElementById('backendUrl').textContent.trim();
-
-  // THEME: single pill button toggles Light <-> Dark
   const themeBtn = document.getElementById('themeBtn');
   const themeText = document.getElementById('themeText');
 
@@ -143,17 +156,16 @@
     if(isDark){
       document.body.classList.add('dark');
       themeText.textContent = 'Dark';
-      // stronger neon shadow for dark
       themeBtn.style.boxShadow = '0 10px 30px rgba(0,194,255,0.18)';
+      document.querySelectorAll('.card').forEach(c=> c.style.boxShadow = '0 6px 18px rgba(0,0,0,0.06)'); // base
     } else {
       document.body.classList.remove('dark');
       themeText.textContent = 'Light';
-      // subtle darker-blue shadow on light
       themeBtn.style.boxShadow = '0 8px 20px rgba(2,34,63,0.06)';
+      document.querySelectorAll('.card').forEach(c=> c.style.boxShadow = '0 6px 18px rgba(0,0,0,0.06)');
     }
   }
 
-  // initialize from localStorage
   const saved = localStorage.getItem('stegov_theme') || 'light';
   applyTheme(saved === 'dark');
 
@@ -163,7 +175,7 @@
     applyTheme(isDark);
   });
 
-  // File previews
+  /* PREVIEWS */
   function previewInput(inputElId, imgId){
     const input = document.getElementById(inputElId);
     const img = document.getElementById(imgId);
@@ -179,7 +191,7 @@
   previewInput('secret','secretPreview');
   previewInput('stego','stegoPreview');
 
-  // POST helper
+  /* POST helper */
   async function postForm(path, files){
     const fd = new FormData();
     Object.entries(files).forEach(([k,v]) => { if(v) fd.append(k, v); });
@@ -192,7 +204,7 @@
     return await res.blob();
   }
 
-  // Encode
+  /* ENCODE */
   document.getElementById('encodeBtn').addEventListener('click', async ()=>{
     const cover = document.getElementById('cover').files[0];
     const secret = document.getElementById('secret').files[0];
@@ -205,7 +217,7 @@
       out.innerHTML = `
         ✅ Stego ready<br>
         <a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a>
-        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:var(--shadow)"></div>
+        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px;box-shadow:var(--shadow)"></div>
       `;
     }catch(err){
       out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
@@ -213,7 +225,7 @@
     }
   });
 
-  // Decode
+  /* DECODE */
   document.getElementById('decodeBtn').addEventListener('click', async ()=>{
     const stego = document.getElementById('stego').files[0];
     const out = document.getElementById('decodeResult');
@@ -225,7 +237,7 @@
       out.innerHTML = `
         ✅ Secret extracted<br>
         <a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a>
-        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:var(--shadow)"></div>
+        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px;box-shadow:var(--shadow)"></div>
       `;
     }catch(err){
       out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
