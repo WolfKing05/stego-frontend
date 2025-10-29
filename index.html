@@ -3,86 +3,75 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>StegoVision — Light & Dark</title>
+<title>StegoVision — Blue Theme (Light & Dark)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  /* -------------------
-     THEMES (CSS VARIABLES)
-     Default (light pastel) uses --* variables on :root
-     Dark theme flips to body.dark
-     ------------------- */
+  /* -------------------------
+     Blue-only palettes:
+     - Light theme: dark navy + neon cyan + soft light blues
+     - Dark theme: deeper navy with neon highlights
+     -------------------------*/
   :root{
-    /* LIGHT PASTEL (default) */
-    --bg: #f6fbf9;           /* soft mint background */
-    --card: #ffffff;         /* white cards */
-    --muted: #6b7280;        /* muted text */
-    --text: #0b1720;         /* dark text */
-    --accent: #8fd7c7;       /* pastel mint (swapped from dark accent) */
-    --accent-2: #ffb7c5;     /* pastel coral */
-    --input-bg: #f1f6f5;
-    --glass: rgba(11,23,32,0.03);
-    --shadow: 0 8px 28px rgba(11,23,32,0.06);
-    --btn-text: #042a2b;
-    --accent-glow: rgba(143,215,199,0.18);
+    /* LIGHT (default) */
+    --bg: linear-gradient(180deg,#f3f8ff,#eaf4ff); /* pale sky */
+    --card: #ffffff;                              /* white card */
+    --text: #02223f;                              /* dark navy text */
+    --muted: #4b6b8f;                             /* slate-blue muted */
+    --accent: #008fd6;                            /* neon-ish cyan-blue */
+    --accent-2: #5fc5ff;                          /* lighter cyan */
+    --soft: #dff4ff;                              /* soft panel */
+    --shadow: 0 10px 28px rgba(3,22,50,0.08);
+    --btn-text: #ffffff;
+    --accent-glow: rgba(0,143,214,0.18);
   }
 
   body.dark {
-    /* DARK theme — using the exact palette you gave */
-    --bg: linear-gradient(135deg,#0e1116,#1b2735);
-    --card: #1a1f29;
-    --muted: #9aa4b2;
-    --text: #e5e5e5;
-    --accent: #00b4d8;
-    --accent-2: #48cae4;
-    --input-bg: #252a34;
-    --glass: rgba(255,255,255,0.03);
-    --shadow: 0 10px 30px rgba(0,0,0,0.55);
+    /* DARK theme (blue-only) */
+    --bg: linear-gradient(180deg,#061020,#071428);
+    --card: #0d1a2a;
+    --text: #dff6ff;
+    --muted: #89b9d9;
+    --accent: #00c2ff;    /* brighter neon in dark theme */
+    --accent-2: #3ad1ff;
+    --soft: rgba(255,255,255,0.03);
+    --shadow: 0 12px 36px rgba(0,0,0,0.7);
     --btn-text: #001;
-    --accent-glow: rgba(0,180,216,0.18);
+    --accent-glow: rgba(0,194,255,0.16);
   }
 
-  /* -------------------
-     Base & layout
-     ------------------- */
+  /* base */
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", system-ui, -apple-system, Roboto, Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
   .wrap{max-width:1100px;margin:28px auto;padding:18px}
 
-  header{
-    display:flex;
-    gap:14px;
-    align-items:center;
-    padding:16px 18px;
-    border-radius:12px;
-    background:var(--card);
-    box-shadow:var(--shadow);
-  }
-  .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--btn-text)}
-  header h1{margin:0;font-size:1.2rem}
+  header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--btn-text);font-size:18px}
+  header h1{margin:0;font-size:1.15rem}
   .header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
-  .theme-toggle{background:var(--input-bg);border-radius:999px;padding:6px;display:flex;align-items:center;gap:8px;border:1px solid rgba(0,0,0,0.04)}
-  .theme-toggle button{background:transparent;border:0;padding:6px 10px;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:600}
-  .theme-toggle button.active{color:var(--text);box-shadow:0 6px 18px var(--accent-glow);font-weight:700}
 
-  .container{display:flex;flex-wrap:wrap;gap:24px;margin-top:18px}
-  .card{background:var(--card);border-radius:14px;padding:22px;box-shadow:var(--shadow);flex:1;min-width:320px;max-width:540px;transition:transform .18s}
+  /* THEME TOGGLE (single button) */
+  .theme-pill{display:inline-flex;align-items:center;gap:10px;background:var(--soft);padding:6px;border-radius:999px;border:1px solid rgba(0,0,0,0.04)}
+  .theme-btn{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow)}
+  .theme-btn .dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.9);box-shadow:0 2px 6px rgba(0,0,0,0.12)}
+  .theme-pill .label{font-weight:600;color:var(--muted);font-size:0.9rem}
+
+  /* layout */
+  .container{display:flex;flex-wrap:wrap;gap:22px;margin-top:18px}
+  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow);flex:1;min-width:320px;max-width:540px;transition:transform .14s}
   .card:hover{transform:translateY(-6px)}
   h3{margin-top:0;color:var(--accent-2);text-align:center}
-  label{display:block;margin-top:12px;margin-bottom:8px;font-weight:600;color:var(--muted)}
-  input[type=file]{width:100%;background:var(--input-bg);border:1px solid rgba(0,0,0,0.06);padding:8px;border-radius:8px;color:var(--muted)}
-  .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:280px;object-fit:contain;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
-  .btn{margin-top:18px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow)}
-  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);box-shadow:none;font-weight:600}
-  .result{text-align:center;margin-top:14px}
-  .download{display:inline-block;margin-top:8px;color:var(--accent-2);font-weight:600;text-decoration:none}
+  label{display:block;margin-top:12px;margin-bottom:8px;font-weight:700;color:var(--muted)}
+  input[type=file]{width:100%;background:var(--soft);border:1px solid rgba(0,0,0,0.05);padding:10px;border-radius:8px;color:var(--muted)}
+  input[type=file]::-webkit-file-upload-button{background:transparent;border:0;padding:6px 8px;color:var(--accent);font-weight:700;cursor:pointer;border-radius:6px}
+  .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:300px;object-fit:contain;box-shadow:0 8px 20px rgba(6,30,60,0.04)}
+  .btn{margin-top:16px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:0 10px 30px var(--accent-glow)}
+  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);box-shadow:none;font-weight:700}
+  .result{text-align:center;margin-top:12px}
+  .download{display:inline-block;margin-top:8px;color:var(--accent-2);font-weight:700;text-decoration:none}
 
-  footer{margin-top:30px;text-align:center;color:var(--muted);font-size:0.9rem}
+  footer{margin-top:28px;text-align:center;color:var(--muted);font-size:0.9rem}
 
-  @media(max-width:860px){
-    .container{flex-direction:column;align-items:center}
-    .card{max-width:880px}
-    .header-right{margin-left:0}
-  }
+  @media(max-width:860px){ .container{flex-direction:column;align-items:center} .card{max-width:900px} .header-right{margin-left:0} }
 </style>
 </head>
 <body>
@@ -92,13 +81,16 @@
     <div class="logo">SV</div>
     <div>
       <h1>StegoVision</h1>
-      <div style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography — two polished themes</div>
+      <div style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography — Blue theme</div>
     </div>
 
     <div class="header-right">
-      <div class="theme-toggle" role="group" aria-label="theme toggle">
-        <button id="lightBtn" class="active">Light</button>
-        <button id="darkBtn">Dark</button>
+      <div class="theme-pill" role="group" aria-label="Theme toggle">
+        <div class="label">Theme</div>
+        <button id="themeBtn" class="theme-btn" title="Toggle theme">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="themeText">Light</span>
+        </button>
       </div>
     </div>
   </header>
@@ -137,41 +129,41 @@
 </div>
 
 <script>
-  // Backend base URL
+  // backend from DOM (safe to change later)
   const BACKEND = document.getElementById('backendUrl').textContent.trim();
 
-  // Theme handling: default = light pastel; toggle to dark
-  const lightBtn = document.getElementById('lightBtn');
-  const darkBtn  = document.getElementById('darkBtn');
+  // THEME: single pill button toggles Light <-> Dark
+  const themeBtn = document.getElementById('themeBtn');
+  const themeText = document.getElementById('themeText');
 
-  function setTheme(theme){
-    if(theme === 'dark'){
+  function applyTheme(isDark){
+    if(isDark){
       document.body.classList.add('dark');
-      darkBtn.classList.add('active');
-      lightBtn.classList.remove('active');
-      localStorage.setItem('stegov_theme','dark');
+      themeText.textContent = 'Dark';
+      // visually show neon dot stronger on dark
+      themeBtn.style.boxShadow = '0 10px 30px rgba(0,194,255,0.18)';
     } else {
       document.body.classList.remove('dark');
-      lightBtn.classList.add('active');
-      darkBtn.classList.remove('active');
-      localStorage.setItem('stegov_theme','light');
+      themeText.textContent = 'Light';
+      themeBtn.style.boxShadow = '0 10px 30px rgba(0,143,214,0.12)';
     }
   }
 
-  lightBtn.addEventListener('click', ()=> setTheme('light'));
-  darkBtn.addEventListener('click', ()=> setTheme('dark'));
+  // initialize from localStorage
+  const saved = localStorage.getItem('stegov_theme') || 'light';
+  applyTheme(saved === 'dark');
 
-  // restore theme
-  (function(){
-    const saved = localStorage.getItem('stegov_theme') || 'light';
-    setTheme(saved);
-  })();
+  themeBtn.addEventListener('click', ()=>{
+    const isDark = document.body.classList.toggle('dark');
+    localStorage.setItem('stegov_theme', isDark ? 'dark' : 'light');
+    applyTheme(isDark);
+  });
 
   // File previews
   function previewInput(inputElId, imgId){
-    const el = document.getElementById(inputElId);
+    const input = document.getElementById(inputElId);
     const img = document.getElementById(imgId);
-    el.addEventListener('change', e=>{
+    input.addEventListener('change', e=>{
       const f = e.target.files && e.target.files[0];
       if(!f){ img.src=''; img.style.display='none'; return; }
       const reader = new FileReader();
@@ -179,18 +171,19 @@
       reader.readAsDataURL(f);
     });
   }
-
   previewInput('cover','coverPreview');
   previewInput('secret','secretPreview');
   previewInput('stego','stegoPreview');
 
+  // POST helper
   async function postForm(path, files){
     const fd = new FormData();
     Object.entries(files).forEach(([k,v]) => { if(v) fd.append(k, v); });
     const res = await fetch(BACKEND + path, { method: 'POST', body: fd });
     if(!res.ok){
-      const txt = await res.text().catch(()=>res.statusText);
-      throw new Error(txt || 'Server error');
+      let text;
+      try { text = await res.text(); } catch(e) { text = res.statusText; }
+      throw new Error(text || 'Server error');
     }
     return await res.blob();
   }
@@ -208,7 +201,7 @@
       out.innerHTML = `
         ✅ Stego ready<br>
         <a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a>
-        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:0 8px 24px var(--accent-glow)"></div>
+        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:0 12px 36px var(--accent-glow)"></div>
       `;
     }catch(err){
       out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
@@ -228,7 +221,7 @@
       out.innerHTML = `
         ✅ Secret extracted<br>
         <a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a>
-        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:0 8px 24px var(--accent-glow)"></div>
+        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:0 12px 36px var(--accent-glow)"></div>
       `;
     }catch(err){
       out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
