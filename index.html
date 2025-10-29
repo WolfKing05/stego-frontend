@@ -1,16 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>StegoVision — Blue Theme (Light & Dark) — Right/Bottom Glow</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>StegoVision — Blue Theme (Light & Dark) — Polished</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  /* -------------------------
-     Base palettes (light + dark)
-     -------------------------*/
   :root{
-    /* LIGHT (default) */
     --bg: linear-gradient(180deg,#f3f8ff,#eaf4ff);
     --card: #ffffff;
     --text: #02223f;
@@ -18,13 +14,10 @@
     --accent: #008fd6;
     --accent-2: #5fc5ff;
     --soft: #dff4ff;
-    --shadow-base: 0 10px 28px rgba(3,22,50,0.08); /* normal shadow for light */
-    /* special right+bottom "dark-blue" glow for light theme */
-    --special-shadow-light: 10px 12px 30px rgba(2,34,63,0.12), 6px 8px 18px rgba(2,34,63,0.06);
+    --shadow: 0 10px 28px rgba(3,22,50,0.08);
     --btn-text: #ffffff;
-    --accent-glow: rgba(0,143,214,0.12);
+    --accent-glow: rgba(0,143,214,0.18);
   }
-
   body.dark {
     --bg: linear-gradient(180deg,#061020,#071428);
     --card: #0d1a2a;
@@ -33,72 +26,56 @@
     --accent: #00c2ff;
     --accent-2: #3ad1ff;
     --soft: rgba(255,255,255,0.03);
-    --shadow-base: 0 10px 36px rgba(0,0,0,0.28); /* normal shadow for dark */
-    /* special right+bottom neon cyan glow for dark theme */
-    --special-shadow-dark: 12px 14px 36px rgba(0,240,255,0.22), 6px 8px 22px rgba(0,140,255,0.10);
+    --shadow: 0 12px 36px rgba(0,0,0,0.7);
     --btn-text: #001;
     --accent-glow: rgba(0,194,255,0.16);
   }
 
-  /* -------------------------
-     Layout & basic styles
-     -------------------------*/
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
   .wrap{max-width:1100px;margin:28px auto;padding:18px}
-  header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow-base);transition:box-shadow .25s, background .25s}
+
+  header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
   .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--btn-text);font-size:18px;box-shadow:var(--accent-glow)}
   header h1{margin:0;font-size:1.15rem}
   .header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
 
   .theme-pill{display:inline-flex;align-items:center;gap:10px;background:var(--soft);padding:6px;border-radius:999px;border:1px solid rgba(0,0,0,0.04)}
-  .theme-btn{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow);transition:box-shadow .2s, transform .12s}
+  .theme-btn{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow)}
   .theme-btn .dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.9);box-shadow:0 2px 6px rgba(0,0,0,0.12)}
 
   .container{display:flex;flex-wrap:wrap;gap:22px;margin-top:18px}
-  /* cards: default uses base shadow */
-  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow-base);flex:1;min-width:320px;max-width:540px;transition:transform .14s, box-shadow .14s}
-  .card:hover{transform:translateY(-6px);}
-
+  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow);flex:1;min-width:320px;max-width:540px;transition:transform .14s}
+  .card:hover{transform:translateY(-6px)}
   h3{margin-top:0;color:var(--accent-2);text-align:center}
   label{display:block;margin-top:12px;margin-bottom:8px;font-weight:700;color:var(--muted)}
   input[type=file]{width:100%;background:var(--soft);border:1px solid rgba(0,0,0,0.05);padding:10px;border-radius:8px;color:var(--muted)}
   input[type=file]::-webkit-file-upload-button{background:transparent;border:0;padding:6px 8px;color:var(--accent);font-weight:700;cursor:pointer;border-radius:6px}
   .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:300px;object-fit:contain;box-shadow:0 8px 20px rgba(6,30,60,0.04)}
-  .btn{margin-top:16px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:var(--accent-glow);transition:transform .12s, box-shadow .12s}
+  .btn{margin-top:16px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:0 10px 30px var(--accent-glow)}
+  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);box-shadow:none;font-weight:700}
   .result{text-align:center;margin-top:12px}
   .download{display:inline-block;margin-top:8px;color:var(--accent-2);font-weight:700;text-decoration:none}
   footer{margin-top:28px;text-align:center;color:var(--muted);font-size:0.9rem}
 
-  /* -------------------------
-     THE SPECIAL RULE:
-     Only the last two cards in .container get the two-sided (right+bottom) blue shadow on hover.
-     Others keep the normal shadow on hover.
-     -------------------------*/
+  /* Progress bar + spinner */
+  .progress-wrap{height:6px;background:rgba(0,0,0,0.04);border-radius:6px;overflow:hidden;margin-top:10px;display:none}
+  .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 300ms ease}
+  .spinner{display:inline-block;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);border-top-color:var(--accent-2);animation:spin 1s linear infinite;vertical-align:middle;margin-left:8px;display:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-  /* reset hover for all cards to keep base shadow unless special */
-  .card:hover { box-shadow: var(--shadow-base); }
+  /* Toast */
+  .toast{position:fixed;right:18px;bottom:18px;padding:10px 14px;border-radius:10px;background:rgba(3,22,50,0.95);color:#dff6ff;box-shadow:0 6px 24px rgba(0,0,0,0.4);opacity:0;transform:translateY(12px);transition:all .28s ease;pointer-events:none}
+  .toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
 
-  /* target the last two cards inside .container */
-  .container .card:nth-last-child(-n+2):hover {
-    /* pick the theme-appropriate special shadow variable */
-    box-shadow: var(--special-shadow-dark);
-  }
+  /* file info */
+  .file-info{font-size:0.85rem;color:var(--muted);margin-top:6px}
 
-  /* BUT when not in dark (i.e., default light), use the light special shadow instead */
-  body:not(.dark) .container .card:nth-last-child(-n+2):hover {
-    box-shadow: var(--special-shadow-light);
-  }
+  /* clear button align */
+  .controls-row{display:flex;gap:8px;align-items:center}
+  .clear-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
 
-  /* slight visual tweak: stronger accent-glow on logo when last-two special */
-  body.dark .container .card:nth-last-child(-n+2):hover ~ header .logo,
-  body.dark .container .card:nth-last-child(-n+2):hover + footer .logo { box-shadow: var(--accent-glow); }
-
-  @media(max-width:860px){
-    .container{flex-direction:column;align-items:center}
-    .card{max-width:900px}
-    .header-right{margin-left:0}
-  }
+  @media(max-width:860px){ .container{flex-direction:column;align-items:center} .card{max-width:900px} .header-right{margin-left:0} }
 </style>
 </head>
 <body>
@@ -108,7 +85,7 @@
     <div class="logo">SV</div>
     <div>
       <h1>StegoVision</h1>
-      <div style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography — Blue theme</div>
+      <div class="sub" style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography — Blue theme</div>
     </div>
 
     <div class="header-right">
@@ -122,125 +99,251 @@
     </div>
   </header>
 
-  <div class="container">
-    <div class="card">
+  <!-- Controls row -->
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px">
+    <div class="controls-row">
+      <button id="clearAll" class="clear-btn">🧹 Clear All</button>
+    </div>
+
+    <div style="font-size:0.9rem;color:var(--muted)"><strong>Backend:</strong> <span id="backendUrl">https://stego-backend-l72r.onrender.com</span></div>
+  </div>
+
+  <div class="container" style="margin-top:14px">
+    <div class="card" id="cardEncode">
       <h3>🔐 Encode (Hide Secret)</h3>
+
       <label for="cover">Cover Image</label>
       <input id="cover" type="file" accept="image/*" />
-      <img id="coverPreview" class="preview" alt="cover preview" />
+      <div id="coverInfo" class="file-info"></div>
+      <img id="coverPreview" class="preview" alt="cover preview" style="display:none" />
 
       <label for="secret">Secret Image</label>
       <input id="secret" type="file" accept="image/*" />
-      <img id="secretPreview" class="preview" alt="secret preview" />
+      <div id="secretInfo" class="file-info"></div>
+      <img id="secretPreview" class="preview" alt="secret preview" style="display:none" />
 
-      <button id="encodeBtn" class="btn">Encode Image</button>
+      <div class="progress-wrap" id="encodeProgress"><div class="progress-bar" id="encodeBar"></div></div>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+        <button id="encodeBtn" class="btn">Encode Image</button>
+        <div class="spinner" id="encodeSpinner" title="Processing"></div>
+      </div>
+
       <div id="encodeResult" class="result"></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="cardDecode">
       <h3>🧩 Decode (Reveal Secret)</h3>
+
       <label for="stego">Stego Image</label>
       <input id="stego" type="file" accept="image/*" />
-      <img id="stegoPreview" class="preview" alt="stego preview" />
+      <div id="stegoInfo" class="file-info"></div>
+      <img id="stegoPreview" class="preview" alt="stego preview" style="display:none" />
 
-      <button id="decodeBtn" class="btn">Decode Image</button>
+      <div class="progress-wrap" id="decodeProgress"><div class="progress-bar" id="decodeBar"></div></div>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+        <button id="decodeBtn" class="btn">Decode Image</button>
+        <div class="spinner" id="decodeSpinner" title="Processing"></div>
+      </div>
+
       <div id="decodeResult" class="result"></div>
     </div>
   </div>
 
-  <footer>⚙️ Backend: <strong id="backendUrl">https://stego-backend-l72r.onrender.com</strong> • © 2025 Aryan Patel</footer>
+  <footer>⚙️ Backend: <strong id="backendUrlFooter">https://stego-backend-l72r.onrender.com</strong> • © 2025 Aryan Patel</footer>
 </div>
 
-<script>
-  // backend from DOM (safe to change later)
-  const BACKEND = document.getElementById('backendUrl').textContent.trim();
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  // theme toggle logic (single pill)
+<script>
+  const BACKEND = document.getElementById('backendUrl').textContent.trim();
+  document.getElementById('backendUrlFooter').textContent = BACKEND;
+
+  // Theme toggle (persist)
   const themeBtn = document.getElementById('themeBtn');
   const themeText = document.getElementById('themeText');
-
   function applyTheme(isDark){
     if(isDark){
       document.body.classList.add('dark');
       themeText.textContent = 'Dark';
-      themeBtn.style.boxShadow = '0 10px 30px rgba(0,194,255,0.18)';
     } else {
       document.body.classList.remove('dark');
       themeText.textContent = 'Light';
-      themeBtn.style.boxShadow = '0 8px 20px rgba(2,34,63,0.06)';
     }
   }
-
-  // init from localStorage
-  const saved = localStorage.getItem('stegov_theme') || 'light';
-  applyTheme(saved === 'dark');
-
+  const savedTheme = localStorage.getItem('stegov_theme') || 'light';
+  applyTheme(savedTheme === 'dark');
   themeBtn.addEventListener('click', ()=>{
-    const isDark = document.body.classList.toggle('dark');
+    const isDark = !document.body.classList.contains('dark');
     localStorage.setItem('stegov_theme', isDark ? 'dark' : 'light');
     applyTheme(isDark);
   });
 
-  // previews
-  function previewInput(inputElId, imgId){
-    const input = document.getElementById(inputElId);
-    const img = document.getElementById(imgId);
-    input.addEventListener('change', e=>{
+  // Utilities: toast
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function showToast(msg, isError=false){
+    toastEl.textContent = msg;
+    toastEl.style.background = isError ? 'rgba(120,10,10,0.95)' : 'rgba(3,22,50,0.95)';
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 2500);
+  }
+
+  // File info helper: show image dims + size + type
+  async function showFileInfo(file, infoEl){
+    if(!file){ infoEl.textContent = ''; return; }
+    const sizeKB = Math.round(file.size / 1024);
+    const type = file.type || 'unknown';
+    // get dimensions via Image object
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      infoEl.textContent = `${img.naturalWidth}×${img.naturalHeight} • ${sizeKB} KB • ${type.split('/').pop().toUpperCase()}`;
+      URL.revokeObjectURL(url);
+    };
+    img.onerror = () => {
+      infoEl.textContent = `${sizeKB} KB • ${type.split('/').pop().toUpperCase()}`;
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  }
+
+  // Preview handlers
+  function wirePreview(inputId, previewId, infoId){
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    const info = document.getElementById(infoId);
+    input.addEventListener('change', async (e)=>{
       const f = e.target.files && e.target.files[0];
-      if(!f){ img.src=''; img.style.display='none'; return; }
+      if(!f){ preview.src=''; preview.style.display='none'; info.textContent=''; return; }
+      showFileInfo(f, info);
       const reader = new FileReader();
-      reader.onload = ev => { img.src = ev.target.result; img.style.display = 'block'; };
+      reader.onload = ev => { preview.src = ev.target.result; preview.style.display = 'block'; };
       reader.readAsDataURL(f);
     });
   }
-  previewInput('cover','coverPreview');
-  previewInput('secret','secretPreview');
-  previewInput('stego','stegoPreview');
+  wirePreview('cover','coverPreview','coverInfo');
+  wirePreview('secret','secretPreview','secretInfo');
+  wirePreview('stego','stegoPreview','stegoInfo');
 
-  // POST helper
-  async function postForm(path, files){
+  // Clear / Reset
+  document.getElementById('clearAll').addEventListener('click', ()=>{
+    ['cover','secret','stego'].forEach(id=>{
+      const el = document.getElementById(id);
+      el.value = '';
+    });
+    ['coverPreview','secretPreview','stegoPreview'].forEach(id=>{
+      const img = document.getElementById(id);
+      img.src=''; img.style.display='none';
+    });
+    ['coverInfo','secretInfo','stegoInfo','encodeResult','decodeResult'].forEach(id=>{
+      const el = document.getElementById(id);
+      el.textContent = '';
+    });
+    // reset progress bars
+    setProgress('encode',0); setProgress('decode',0);
+    // hide spinners
+    stopSpinner('encode'); stopSpinner('decode');
+    showToast('Cleared', false);
+  });
+
+  // Progress helpers
+  function setProgress(which, pct){
+    const bar = document.getElementById(which + 'Bar');
+    const wrap = document.getElementById(which + 'Progress');
+    if(pct <= 0){ wrap.style.display = 'none'; bar.style.width = '0%'; }
+    else { wrap.style.display = 'block'; bar.style.width = pct + '%'; }
+  }
+  function startSpinner(which){
+    document.getElementById(which + 'Spinner').style.display = 'inline-block';
+  }
+  function stopSpinner(which){
+    document.getElementById(which + 'Spinner').style.display = 'none';
+  }
+
+  // POST helper with simple progress simulation (we can't get upload progress from fetch reliably here in all environments)
+  async function postFormWithProgress(path, files, which){
     const fd = new FormData();
     Object.entries(files).forEach(([k,v]) => { if(v) fd.append(k, v); });
+    // show spinner + progress
+    setProgress(which, 6);
+    startSpinner(which);
+    // small animated fake progress until response arrives
+    let fake = 6;
+    const fakeInt = setInterval(()=>{ fake = Math.min(92, fake + Math.random()*8); setProgress(which, Math.round(fake)); }, 220);
+
     const res = await fetch(BACKEND + path, { method: 'POST', body: fd });
+    clearInterval(fakeInt);
+    setProgress(which, 92);
+    stopSpinner(which);
     if(!res.ok){
-      let text;
-      try { text = await res.text(); } catch(e) { text = res.statusText; }
-      throw new Error(text || 'Server error');
+      const txt = await res.text().catch(()=>res.statusText);
+      setProgress(which,0);
+      throw new Error(txt || 'Server error');
     }
+    // finalize
+    setProgress(which, 100);
+    // small delay so users see full bar
+    await new Promise(r=>setTimeout(r,220));
+    setProgress(which,0);
     return await res.blob();
   }
 
-  // encode
+  // Encode flow
   document.getElementById('encodeBtn').addEventListener('click', async ()=>{
     const cover = document.getElementById('cover').files[0];
     const secret = document.getElementById('secret').files[0];
     const out = document.getElementById('encodeResult');
-    if(!cover || !secret){ out.innerHTML = '<span style="color:#ff6b6b">Select both cover and secret</span>'; return; }
-    out.innerHTML = '⏳ Encoding...';
+    if(!cover || !secret){ showToast('Select both cover and secret', true); out.innerHTML = '<span style="color:#ff6b6b">Select both images</span>'; return; }
+    out.textContent = '';
     try{
-      const blob = await postForm('/encode', { cover, secret });
+      const blob = await postFormWithProgress('/encode', { cover, secret }, 'encode');
       const url = URL.createObjectURL(blob);
-      out.innerHTML = `✅ Stego ready<br><a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a><div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:var(--shadow-base)"></div>`;
+      out.innerHTML = `
+        ✅ Stego ready<br>
+        <a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a><br>
+        <img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px" alt="stego preview">
+      `;
+      showToast('Stego image encoded', false);
     }catch(err){
       out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
+      showToast('Encode failed: ' + err.message, true);
       console.error(err);
     }
   });
 
-  // decode
+  // Decode flow
   document.getElementById('decodeBtn').addEventListener('click', async ()=>{
     const stego = document.getElementById('stego').files[0];
     const out = document.getElementById('decodeResult');
-    if(!stego){ out.innerHTML = '<span style="color:#ff6b6b">Select a stego image</span>'; return; }
-    out.innerHTML = '⏳ Decoding...';
+    if(!stego){ showToast('Select a stego image', true); out.innerHTML = '<span style="color:#ff6b6b">Select a stego image</span>'; return; }
+    out.textContent = '';
     try{
-      const blob = await postForm('/decode', { stego });
+      const blob = await postFormWithProgress('/decode', { stego }, 'decode');
       const url = URL.createObjectURL(blob);
-      out.innerHTML = `✅ Secret extracted<br><a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a><div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:var(--shadow-base)"></div>`;
+      out.innerHTML = `
+        ✅ Secret extracted<br>
+        <a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a><br>
+        <img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px" alt="extracted preview">
+      `;
+      showToast('Secret extracted', false);
     }catch(err){
       out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
+      showToast('Decode failed: ' + err.message, true);
       console.error(err);
     }
+  });
+
+  // small accessibility: press Enter in cover/secret to trigger encode
+  ['cover','secret'].forEach(id=>{
+    document.getElementById(id).addEventListener('keydown', e=>{
+      if(e.key === 'Enter') document.getElementById('encodeBtn').click();
+    });
+  });
+  // Enter on stego triggers decode
+  document.getElementById('stego').addEventListener('keydown', e=>{
+    if(e.key === 'Enter') document.getElementById('decodeBtn').click();
   });
 </script>
 </body>
