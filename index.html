@@ -3,209 +3,206 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>StegoVision — Dark (original) + Light Pastel</title>
+<title>StegoVision — Blue Theme (Light & Dark)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  /* ===========================
-     Dark theme variables (exact from your code)
-     =========================== */
+  /* -------------------------
+     Blue-only palettes:
+     - Light theme: dark navy + neon cyan + soft light blues
+     - Dark theme: deeper navy with neon highlights
+     -------------------------*/
   :root{
-    --bg-dark: #0e1116;
-    --bg-card: #1a1f29;
-    --accent-dark: #00b4d8;
-    --accent-light-dark: #48cae4;
-    --text-light: #e5e5e5;
-    --shadow-dark: rgba(0, 0, 0, 0.6);
+    /* LIGHT (default) */
+    --bg: linear-gradient(180deg,#f3f8ff,#eaf4ff); /* pale sky */
+    --card: #ffffff;                              /* white card */
+    --text: #02223f;                              /* dark navy text */
+    --muted: #4b6b8f;                             /* slate-blue muted */
+    --accent: #008fd6;                            /* neon-ish cyan-blue */
+    --accent-2: #5fc5ff;                          /* lighter cyan */
+    --soft: #dff4ff;                              /* soft panel */
+    --shadow: 0 10px 28px rgba(3,22,50,0.08);
+    --btn-text: #ffffff;
+    --accent-glow: rgba(0,143,214,0.18);
   }
 
-  /* ===========================
-     Light pastel theme variables
-     (soft mint + coral pastel swap)
-     =========================== */
-  :root.light {
-    --bg-light: linear-gradient(180deg,#f6fbf9,#eaf7f4);
-    --card-light: #ffffff;
-    --accent-lightmain: #8fd7c7;   /* pastel mint */
-    --accent-light2: #ffb7c5;      /* pastel coral */
-    --text-dark: #0b1720;
-    --shadow-light: 0 8px 30px rgba(11,23,32,0.06);
+  body.dark {
+    /* DARK theme (blue-only) */
+    --bg: linear-gradient(180deg,#061020,#071428);
+    --card: #0d1a2a;
+    --text: #dff6ff;
+    --muted: #89b9d9;
+    --accent: #00c2ff;    /* brighter neon in dark theme */
+    --accent-2: #3ad1ff;
+    --soft: rgba(255,255,255,0.03);
+    --shadow: 0 12px 36px rgba(0,0,0,0.7);
+    --btn-text: #001;
+    --accent-glow: rgba(0,194,255,0.16);
   }
 
-  /* ===========================
-     Base layout uses variables depending on body.dark or body.light-mode
-     We'll map variables in CSS rules below.
-     =========================== */
+  /* base */
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,Segoe UI,system-ui,-apple-system,Roboto,Arial;background:var(--page-bg);color:var(--text);-webkit-font-smoothing:antialiased;transition:all .35s ease;}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
   .wrap{max-width:1100px;margin:28px auto;padding:18px}
 
-  header{display:flex;align-items:center;gap:14px;padding:14px;border-radius:12px;background:var(--card-bg);box-shadow:0 4px 12px var(--shadow);transition:all .35s ease}
-  .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--btn-text)}
+  header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--btn-text);font-size:18px}
   header h1{margin:0;font-size:1.15rem}
-  header .sub{font-size:0.9rem;color:var(--muted)}
-  .header-right{margin-left:auto}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
 
-  .theme-pill{display:inline-flex;align-items:center;gap:10px;background:transparent;padding:4px;border-radius:999px}
-  .theme-btn{border:0;border-radius:999px;padding:8px 14px;font-weight:700;color:var(--btn-text);background:linear-gradient(90deg,var(--accent),var(--accent2));cursor:pointer;box-shadow:var(--accent-glow)}
-  .theme-btn .dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.9);box-shadow:0 0 8px rgba(255,255,255,0.6)}
+  /* THEME TOGGLE (single button) */
+  .theme-pill{display:inline-flex;align-items:center;gap:10px;background:var(--soft);padding:6px;border-radius:999px;border:1px solid rgba(0,0,0,0.04)}
+  .theme-btn{display:flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow)}
+  .theme-btn .dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.9);box-shadow:0 2px 6px rgba(0,0,0,0.12)}
+  .theme-pill .label{font-weight:600;color:var(--muted);font-size:0.9rem}
 
-  .container{display:flex;flex-wrap:wrap;gap:24px;margin-top:18px}
-  .card{background:var(--card-bg);border-radius:14px;padding:22px;box-shadow:0 6px 18px rgba(0,0,0,0.06);flex:1;min-width:320px;max-width:520px;transition:transform .18s}
+  /* layout */
+  .container{display:flex;flex-wrap:wrap;gap:22px;margin-top:18px}
+  .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow);flex:1;min-width:320px;max-width:540px;transition:transform .14s}
   .card:hover{transform:translateY(-6px)}
-  h3{margin-top:0;color:var(--accent2);text-align:center}
-  label{display:block;margin-top:12px;margin-bottom:8px;font-weight:600;color:var(--muted)}
-  input[type=file]{width:100%;background:var(--input-bg);border:1px solid rgba(0,0,0,0.06);padding:8px;border-radius:8px;color:var(--muted)}
-  input[type=file]::-webkit-file-upload-button{background:var(--accent);border:none;padding:6px 10px;border-radius:6px;color:#fff;cursor:pointer}
-  .preview{width:100%;margin-top:10px;border-radius:10px;max-height:260px;object-fit:contain;box-shadow:0 0 10px rgba(0,0,0,0.06)}
-  .btn{margin-top:16px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:var(--accent-glow)}
+  h3{margin-top:0;color:var(--accent-2);text-align:center}
+  label{display:block;margin-top:12px;margin-bottom:8px;font-weight:700;color:var(--muted)}
+  input[type=file]{width:100%;background:var(--soft);border:1px solid rgba(0,0,0,0.05);padding:10px;border-radius:8px;color:var(--muted)}
+  input[type=file]::-webkit-file-upload-button{background:transparent;border:0;padding:6px 8px;color:var(--accent);font-weight:700;cursor:pointer;border-radius:6px}
+  .preview{width:100%;margin-top:10px;border-radius:10px;background:transparent;max-height:300px;object-fit:contain;box-shadow:0 8px 20px rgba(6,30,60,0.04)}
+  .btn{margin-top:16px;width:100%;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--btn-text);font-weight:800;cursor:pointer;box-shadow:0 10px 30px var(--accent-glow)}
+  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);box-shadow:none;font-weight:700}
   .result{text-align:center;margin-top:12px}
-  .download{display:inline-block;margin-top:8px;color:var(--accent2);font-weight:700;text-decoration:none}
+  .download{display:inline-block;margin-top:8px;color:var(--accent-2);font-weight:700;text-decoration:none}
+
   footer{margin-top:28px;text-align:center;color:var(--muted);font-size:0.9rem}
-
-  /* ===========================
-     Dark theme mapping — matches your original code
-     =========================== */
-  body.dark{
-    --page-bg: linear-gradient(135deg,var(--bg-dark), #1b2735);
-    --card-bg: var(--bg-card);
-    --accent: var(--accent-dark);
-    --accent2: var(--accent-light-dark);
-    --text: var(--text-light);
-    --muted: #cfcfcf;
-    --input-bg: #252a34;
-    --btn-text: #fff;
-    --accent-glow: 0 0 12px rgba(0,180,216,0.28), 0 0 28px rgba(72,202,228,0.13);
-    --shadow: var(--shadow-dark);
-  }
-
-  /* ===========================
-     Light theme mapping — pastel mint + coral
-     =========================== */
-  body.light-mode{
-    --page-bg: var(--bg-light);
-    --card-bg: var(--card-light);
-    --accent: var(--accent-lightmain);
-    --accent2: var(--accent-light2);
-    --text: var(--text-dark);
-    --muted: #60707d;
-    --input-bg: #f1f6f5;
-    --btn-text: #042a2b;
-    --accent-glow: 0 0 12px rgba(143,215,199,0.18),0 0 28px rgba(255,183,197,0.12);
-    --shadow: var(--shadow-light);
-  }
 
   @media(max-width:860px){ .container{flex-direction:column;align-items:center} .card{max-width:900px} .header-right{margin-left:0} }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="logo">SV</div>
-      <div>
-        <h1>StegoVision</h1>
-        <div class="sub">Cloud Image Steganography</div>
-      </div>
 
-      <div class="header-right">
-        <div class="theme-pill">
-          <button id="themeBtn" class="theme-btn"><span class="dot"></span><span id="themeLabel" style="margin-left:8px"></span></button>
-        </div>
-      </div>
-    </header>
-
-    <div class="container">
-      <div class="card">
-        <h3>🔐 Encode (Hide Secret)</h3>
-        <label>Cover Image</label>
-        <input type="file" id="cover" accept="image/*" />
-        <img id="coverPreview" class="preview" alt="Cover Preview" />
-
-        <label>Secret Image</label>
-        <input type="file" id="secret" accept="image/*" />
-        <img id="secretPreview" class="preview" alt="Secret Preview" />
-
-        <button id="encodeBtn" class="btn">Encode Image</button>
-        <div class="result" id="encodeResult"></div>
-      </div>
-
-      <div class="card">
-        <h3>🧩 Decode (Reveal Secret)</h3>
-        <label>Stego Image</label>
-        <input type="file" id="stego" accept="image/*" />
-        <img id="stegoPreview" class="preview" alt="Stego Preview" />
-
-        <button id="decodeBtn" class="btn">Decode Image</button>
-        <div class="result" id="decodeResult"></div>
-      </div>
+<div class="wrap">
+  <header>
+    <div class="logo">SV</div>
+    <div>
+      <h1>StegoVision</h1>
+      <div style="font-size:0.9rem;color:var(--muted)">Cloud Image Steganography — Blue theme</div>
     </div>
 
-    <footer>⚙️ Backend: <strong id="backendUrl">https://stego-backend-l72r.onrender.com</strong> • © 2025 Aryan Patel</footer>
+    <div class="header-right">
+      <div class="theme-pill" role="group" aria-label="Theme toggle">
+        <div class="label">Theme</div>
+        <button id="themeBtn" class="theme-btn" title="Toggle theme">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="themeText">Light</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h3>🔐 Encode (Hide Secret)</h3>
+
+      <label for="cover">Cover Image</label>
+      <input id="cover" type="file" accept="image/*" />
+      <img id="coverPreview" class="preview" alt="cover preview" />
+
+      <label for="secret">Secret Image</label>
+      <input id="secret" type="file" accept="image/*" />
+      <img id="secretPreview" class="preview" alt="secret preview" />
+
+      <button id="encodeBtn" class="btn">Encode Image</button>
+
+      <div id="encodeResult" class="result"></div>
+    </div>
+
+    <div class="card">
+      <h3>🧩 Decode (Reveal Secret)</h3>
+
+      <label for="stego">Stego Image</label>
+      <input id="stego" type="file" accept="image/*" />
+      <img id="stegoPreview" class="preview" alt="stego preview" />
+
+      <button id="decodeBtn" class="btn">Decode Image</button>
+
+      <div id="decodeResult" class="result"></div>
+    </div>
   </div>
 
+  <footer>⚙️ Backend: <strong id="backendUrl">https://stego-backend-l72r.onrender.com</strong> • © 2025 Aryan Patel</footer>
+</div>
+
 <script>
-  // backend
+  // backend from DOM (safe to change later)
   const BACKEND = document.getElementById('backendUrl').textContent.trim();
 
-  // Theme logic:
+  // THEME: single pill button toggles Light <-> Dark
   const themeBtn = document.getElementById('themeBtn');
-  const themeLabel = document.getElementById('themeLabel');
+  const themeText = document.getElementById('themeText');
 
-  function setDark() {
-    document.body.classList.add('dark');
-    document.body.classList.remove('light-mode');
-    themeLabel.textContent = 'Dark';
-    localStorage.setItem('stegov_theme','dark');
-  }
-  function setLight() {
-    document.body.classList.add('light-mode');
-    document.body.classList.remove('dark');
-    themeLabel.textContent = 'Light';
-    localStorage.setItem('stegov_theme','light');
+  function applyTheme(isDark){
+    if(isDark){
+      document.body.classList.add('dark');
+      themeText.textContent = 'Dark';
+      // visually show neon dot stronger on dark
+      themeBtn.style.boxShadow = '0 10px 30px rgba(0,194,255,0.18)';
+    } else {
+      document.body.classList.remove('dark');
+      themeText.textContent = 'Light';
+      themeBtn.style.boxShadow = '0 10px 30px rgba(0,143,214,0.12)';
+    }
   }
 
-  // Initialize: default to dark if saved not present
-  (function initTheme(){
-    const saved = localStorage.getItem('stegov_theme');
-    if(saved === 'light') setLight(); else setDark();
-  })();
+  // initialize from localStorage
+  const saved = localStorage.getItem('stegov_theme') || 'light';
+  applyTheme(saved === 'dark');
 
   themeBtn.addEventListener('click', ()=>{
-    if(document.body.classList.contains('dark')) setLight(); else setDark();
+    const isDark = document.body.classList.toggle('dark');
+    localStorage.setItem('stegov_theme', isDark ? 'dark' : 'light');
+    applyTheme(isDark);
   });
 
-  // Image preview helper
-  function preview(input, id){
-    const file = input.files && input.files[0];
-    const img = document.getElementById(id);
-    if(!file){ img.src=''; img.style.display='none'; return; }
-    const reader = new FileReader();
-    reader.onload = e => { img.src = e.target.result; img.style.display='block'; }
-    reader.readAsDataURL(file);
+  // File previews
+  function previewInput(inputElId, imgId){
+    const input = document.getElementById(inputElId);
+    const img = document.getElementById(imgId);
+    input.addEventListener('change', e=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f){ img.src=''; img.style.display='none'; return; }
+      const reader = new FileReader();
+      reader.onload = ev => { img.src = ev.target.result; img.style.display = 'block'; };
+      reader.readAsDataURL(f);
+    });
   }
-  document.getElementById('cover').onchange = e => preview(e.target,'coverPreview');
-  document.getElementById('secret').onchange = e => preview(e.target,'secretPreview');
-  document.getElementById('stego').onchange = e => preview(e.target,'stegoPreview');
+  previewInput('cover','coverPreview');
+  previewInput('secret','secretPreview');
+  previewInput('stego','stegoPreview');
 
   // POST helper
-  async function send(url, files){
+  async function postForm(path, files){
     const fd = new FormData();
-    for(const [k,v] of Object.entries(files)) if(v) fd.append(k,v);
-    const res = await fetch(url, { method: 'POST', body: fd });
-    if(!res.ok) throw new Error(await res.text());
+    Object.entries(files).forEach(([k,v]) => { if(v) fd.append(k, v); });
+    const res = await fetch(BACKEND + path, { method: 'POST', body: fd });
+    if(!res.ok){
+      let text;
+      try { text = await res.text(); } catch(e) { text = res.statusText; }
+      throw new Error(text || 'Server error');
+    }
     return await res.blob();
   }
 
   // Encode
   document.getElementById('encodeBtn').addEventListener('click', async ()=>{
-    const out = document.getElementById('encodeResult');
     const cover = document.getElementById('cover').files[0];
     const secret = document.getElementById('secret').files[0];
+    const out = document.getElementById('encodeResult');
     if(!cover || !secret){ out.innerHTML = '<span style="color:#ff6b6b">Select both cover and secret</span>'; return; }
     out.innerHTML = '⏳ Encoding...';
     try{
-      const blob = await send(BACKEND + '/encode', { cover, secret });
+      const blob = await postForm('/encode', { cover, secret });
       const url = URL.createObjectURL(blob);
-      out.innerHTML = `✅ Stego ready<br><a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a><br><img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px">`;
+      out.innerHTML = `
+        ✅ Stego ready<br>
+        <a class="download" href="${url}" download="stego.png">⬇ Download stego.png</a>
+        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:0 12px 36px var(--accent-glow)"></div>
+      `;
     }catch(err){
       out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
       console.error(err);
@@ -214,20 +211,18 @@
 
   // Decode
   document.getElementById('decodeBtn').addEventListener('click', async ()=>{
-    const out = document.getElementById('decodeResult');
     const stego = document.getElementById('stego').files[0];
+    const out = document.getElementById('decodeResult');
     if(!stego){ out.innerHTML = '<span style="color:#ff6b6b">Select a stego image</span>'; return; }
     out.innerHTML = '⏳ Decoding...';
     try{
-      const blob = await send(BACKEND + '/decode', { st ego: stego });
-      // NOTE: keep key 'stego' — but avoid accidental typo below
-    }catch(e){
-      // fallback: if above failed due to typo, call correctly
-    }
-    try{
-      const blob2 = await send(BACKEND + '/decode', { stego });
-      const url = URL.createObjectURL(blob2);
-      out.innerHTML = `✅ Secret extracted<br><a class="download" href="${url}" download="extracted.png">⬇ Download</a><br><img src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px">`;
+      const blob = await postForm('/decode', { stego });
+      const url = URL.createObjectURL(blob);
+      out.innerHTML = `
+        ✅ Secret extracted<br>
+        <a class="download" href="${url}" download="extracted.png">⬇ Download extracted.png</a>
+        <div style="margin-top:10px"><img src="${url}" style="max-width:100%;border-radius:8px;box-shadow:0 12px 36px var(--accent-glow)"></div>
+      `;
     }catch(err){
       out.innerHTML = `<span style="color:#ff6b6b">❌ ${err.message}</span>`;
       console.error(err);
