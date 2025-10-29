@@ -57,6 +57,14 @@
     background-color: var(--bg-solid);
   }
 
+  /* Add same gradient to html as an extra safety layer (prevents white flash/strip in some browsers) */
+  html {
+    background: var(--bg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+
   /* Use a fixed pseudo element to render the gradient background and keep it behind everything.
      This guarantees full-viewport coverage even when content scrolls or viewport sizing quirks occur. */
   body::before {
@@ -69,6 +77,8 @@
     background-size: cover;
     background-attachment: fixed;
     pointer-events: none;
+    /* ensure full coverage on extremely tall viewports too */
+    min-height: 100vh;
   }
 
   /* wrapper should fill available height so footer doesn't expose page background gaps */
@@ -78,7 +88,9 @@
     padding:18px;
     position:relative;
     /* ensure wrap grows to at least viewport minus header+footer, preventing background gaps */
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 160px);
+    /* extra bottom padding so footer never touches edge on tall screens */
+    padding-bottom: 48px;
   }
 
   header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow-base);transition:box-shadow .25s, background .25s}
