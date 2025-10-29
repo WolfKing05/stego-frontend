@@ -43,17 +43,16 @@ stego-frontend/
 
 ---
 
-## 🔗 Backend Integration
+## 🚀 How to Run
 
-Backend API endpoints (Flask):
+You can run **Rahasya** locally or directly via GitHub Pages.
 
-| Endpoint | Method | Description |
-|-----------|---------|-------------|
-| `/encode` | POST | Accepts `cover` + `secret` → Returns `stego.png` |
-| `/decode` | POST | Accepts `stego` → Returns `extracted.png` |
+### 🖥️ Option 1 — Run Locally
 
-Configured inside `index.html`:
-```js
-const BACKEND = "https://stego-backend-l72r.onrender.com";
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/wolfking05/stego-frontend.git
+   cd stego-frontend
+
 
 
