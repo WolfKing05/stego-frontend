@@ -12,6 +12,7 @@
   :root{
     /* LIGHT */
     --bg: linear-gradient(180deg,#f3f8ff,#eaf4ff);
+    --bg-solid: #f3f8ff; /* light fallback */
     --card: #ffffff;
     --text: #02223f;
     --muted: #4b6b8f;
@@ -27,6 +28,7 @@
 
   body.dark{
     --bg: linear-gradient(180deg,#061020,#071428);
+    --bg-solid: #071428; /* dark fallback */
     --card: #0d1a2a;
     --text: #dff6ff;
     --muted: #89b9d9;
@@ -44,15 +46,15 @@
      -------------------------*/
   *{box-sizing:border-box}
 
-  /* Ensure body/html always fill viewport and background is guaranteed to cover (no white strip) */
+  /* Ensure body/html always fill viewport and background is theme-aware so light/dark both look correct */
   html, body {
     height: 100%;
     margin: 0;
     font-family: Inter, system-ui, "Segoe UI", Roboto, Arial;
     color: var(--text);
     -webkit-font-smoothing: antialiased;
-    /* fallback solid color so there's never white */
-    background-color: #071428;
+    /* theme-aware solid fallback so light theme isn't accidentally dark */
+    background-color: var(--bg-solid);
   }
 
   /* Use a fixed pseudo element to render the gradient background and keep it behind everything.
@@ -75,7 +77,7 @@
     margin:24px auto;
     padding:18px;
     position:relative;
-    /* ensure wrap grows to at least viewport minus header+footer, preventing white strip at bottom */
+    /* ensure wrap grows to at least viewport minus header+footer, preventing background gaps */
     min-height: calc(100vh - 120px);
   }
 
