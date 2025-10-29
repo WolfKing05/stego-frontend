@@ -43,32 +43,41 @@
      Base layout
      -------------------------*/
   *{box-sizing:border-box}
-  /* Updated so background always covers viewport and no white strip appears */
-  html,body{
-    height:100%;
-    margin:0;
-    font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
-    background:var(--bg);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    /* ensure gradient always fills viewport and doesn't tile/show white */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    min-height: 100vh;
+
+  /* Ensure body/html always fill viewport and background is guaranteed to cover (no white strip) */
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Inter, system-ui, "Segoe UI", Roboto, Arial;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    /* fallback solid color so there's never white */
+    background-color: #071428;
   }
 
-  /* also make html explicitly use same background (extra safety) */
-  html {
+  /* Use a fixed pseudo element to render the gradient background and keep it behind everything.
+     This guarantees full-viewport coverage even when content scrolls or viewport sizing quirks occur. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    z-index: -9999;
     background: var(--bg);
     background-repeat: no-repeat;
-    background-attachment: fixed;
     background-size: cover;
-    height: 100%;
+    background-attachment: fixed;
+    pointer-events: none;
   }
 
-  /* ensure wrapper always extends to avoid footer/white bleed */
-  .wrap{max-width:1180px;margin:24px auto;padding:18px;position:relative; min-height: calc(100vh - 120px);}
+  /* wrapper should fill available height so footer doesn't expose page background gaps */
+  .wrap{
+    max-width:1180px;
+    margin:24px auto;
+    padding:18px;
+    position:relative;
+    /* ensure wrap grows to at least viewport minus header+footer, preventing white strip at bottom */
+    min-height: calc(100vh - 120px);
+  }
 
   header{display:flex;gap:14px;align-items:center;padding:14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow-base);transition:box-shadow .25s, background .25s}
   .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--btn-text);font-size:18px;box-shadow:var(--accent-glow)}
@@ -155,6 +164,8 @@
     .history-drawer.open{left:0}
     .history-handle{left:8px}
     .history-open .history-handle{left:100%}
+    /* ensure no white gaps on small screens */
+    .wrap { min-height: auto; padding-bottom: 24px; }
   }
 </style>
 </head>
