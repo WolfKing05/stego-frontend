@@ -117,9 +117,6 @@ If successful, both commands return a valid .png file without any errors.
 
 ---
 
-```md
----
-
 ## 🧾 Cloud Concepts Demonstrated
 
 - **Platform as a Service (PaaS):** Render hosts the Flask-based backend API.  
