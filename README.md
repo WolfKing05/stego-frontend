@@ -130,10 +130,12 @@ If successful, both commands return a valid .png file without any errors.
 
 ## 🧩 Repository Structure
 
+```
 stego-frontend/
 ├── index.html  # Main single-page web application
 ├── assets/     # (Optional) static icons, images
 └── README.md   # Documentation file
+```
 
 ---
 
