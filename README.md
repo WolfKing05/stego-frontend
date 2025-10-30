@@ -63,6 +63,8 @@ The project demonstrates a practical fusion of **Digital Image Processing** and 
 5. Download the stego image (`stego.png`).
 6. To **decode**, upload the stego image and click **Decode** → Extracted secret image is shown and downloadable.
 
+---
+
 ## 🧩 System Architecture
 ```mermaid
 flowchart TD
@@ -95,6 +97,7 @@ You can also run the project locally before deploying:
    ```bash
    git clone https://github.com/wolfking05/stego-frontend.git
    cd stego-frontend
+   ```
 
 2. Open the file **index.html** directly in your web browser.  
    - You can simply double-click it, or  
@@ -105,15 +108,9 @@ You can also run the project locally before deploying:
      Then open: [http://localhost:8000](http://localhost:8000)
 
 3. Make sure your backend API link inside `index.html` points to your Render deployment:
-
    ```html
    <span id="backendUrl">https://stego-backend-l72r.onrender.com</span>
-
-If successful, both commands return a valid .png file without any errors.
-
----
-
-✅ **Then continue immediately with the next section:**
+   ```
 
 ---
 
@@ -200,4 +197,3 @@ This project bridges **Digital Image Processing** and **Cloud Computing**, makin
 For educational and demonstrative use only.
 
 ---
-
