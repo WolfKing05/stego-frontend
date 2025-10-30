@@ -68,10 +68,10 @@ The project demonstrates a practical fusion of **Digital Image Processing** and 
 ## 🧩 System Architecture
 ```mermaid
 flowchart TD
-    User[Web Browser<br>(Frontend)] -->|Uploads images| FE[Netlify Frontend]
-    FE -->|POST /encode, /decode| BE[Flask API<br>(Render Cloud)]
-    BE -->|DWT + DCT Processing| IMG[Image Processing Engine]
-    IMG -->|Stego/Secret PNG| FE
+    User["Web Browser (Frontend)"] -->|Uploads images| FE["Netlify Frontend"]
+    FE -->|POST /encode, /decode| BE["Flask API (Render Cloud)"]
+    BE -->|DWT + DCT Processing| IMG["Image Processing Engine"]
+    IMG -->|Returns Stego/Secret PNG| FE
 
 ---
 
