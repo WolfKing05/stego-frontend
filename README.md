@@ -1,5 +1,9 @@
 # 🕵️‍♂️ Rahasya — DWT-DCT Image Steganography (Frontend)
 
+<p align="center">
+  <img src="https://github.com/wolfking05/stego-frontend/raw/main/rahasya.png" alt="Rahasya Frontend Screenshot" width="800"/>
+</p>
+
 > “Where Every Pixel Speaks in Silence”  
 > **Author:** Aryan Patel  
 > **Year:** 2025  
