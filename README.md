@@ -63,8 +63,6 @@ The project demonstrates a practical fusion of **Digital Image Processing** and 
 5. Download the stego image (`stego.png`).
 6. To **decode**, upload the stego image and click **Decode** → Extracted secret image is shown and downloadable.
 
----
-
 ## 🧩 System Architecture
 ```mermaid
 flowchart TD
@@ -72,6 +70,7 @@ flowchart TD
     FE -->|POST /encode, /decode| BE["Flask API (Render Cloud)"]
     BE -->|DWT + DCT Processing| IMG["Image Processing Engine"]
     IMG -->|Returns Stego/Secret PNG| FE
+```
 
 ---
 
